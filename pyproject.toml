@@ -1,0 +1,21 @@
+[project]
+name = "BMG"
+version = "0.0.1"
+description = "Bogdanovych's Mini Games"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+    { name = "Andrii Bogdanovych", email = "a@bogdanovych.org" }
+]
+dependencies = [
+  "flet"
+]
+
+[tool.flet]
+org = "org.bogdanovych"
+product = "BMG"
+company = "Bogdanovych Corp."
+copyright = "Copyright (C) 2025 by Andrii Bogdanovych"
+
+[tool.flet.app]
+path = "src"
