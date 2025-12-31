@@ -5,6 +5,7 @@ venv*/
 **/__pycache__/
 **/*.pyc
 build/
+src/temp/
 htmlcov/
 .pytest_cache/
 .coverage

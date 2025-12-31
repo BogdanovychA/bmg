@@ -1,45 +1,53 @@
 # -*- coding: utf-8 -*-
+
+import asyncio
 import flet as ft
+import root
+import games.next_number as next_number
+
+def build_main_view(page: ft.Page) -> ft.View:
+    return ft.View(
+                route=root.ROUTE,
+                vertical_alignment=ft.MainAxisAlignment.CENTER,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                controls=[
+                    ft.AppBar(title=ft.Text(root.TITLE), center_title=True),
+                    ft.Text("Обери гру, в яку хочеш зіграти:"),
+                    ft.Button(
+                        next_number.TITLE,
+                        on_click=lambda: asyncio.create_task(
+                            page.push_route(next_number.ROUTE)
+                        ),
+                    ),
+                ],
+            )
 
 def main(page: ft.Page):
-    page.title = "Bogdanovych's Mini Games"
+    page.title = root.TITLE
     page.theme_mode = ft.ThemeMode.DARK
-    # page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    def reduce_click(event: ft.ControlEvent):
-        answer.value = str(int(answer.value) - 1)
-        event.page.update()
+    def route_change(e):
+        page.views.clear()
+        page.views.append(
+            build_main_view(page)
+        )
+        if page.route == next_number.ROUTE:
+            page.views.append(
+                next_number.build_view(page)
+            )
+        page.update()
 
-    def add_click(event: ft.ControlEvent):
-        answer.value = str(int(answer.value) + 1)
-        event.page.update()
+    async def view_pop(e):
+        if e.view is not None:
+            page.views.remove(e.view)
+            top_view = page.views[-1]
+            await page.push_route(top_view.route)
 
-    def ok(event: ft.ControlEvent):
-        text_info.value = answer.value
-        event.page.update()
+    page.on_route_change = route_change
+    page.on_view_pop = view_pop
 
-    text_info = ft.Text(value="")
-    game_title = ft.Text("Вгадай наступне число")
-    question = ft.Text("1, 2, 3, 4, 5, X")
-    minus_button = ft.IconButton(ft.Icons.REMOVE, on_click=reduce_click)
-    answer = ft.TextField(value="0", width=100)
-    plus_button = ft.IconButton(ft.Icons.ADD, on_click=add_click)
-    ok_button = ft.Button("Підтвердити", on_click=ok)
+    route_change(None)
 
-    main_layout = ft.Column(
-        controls=[
-            game_title,
-            question,
-            ft.Row([minus_button, answer, plus_button], alignment=ft.MainAxisAlignment.CENTER),
-            text_info,
-            ok_button
-        ],
-        alignment=ft.MainAxisAlignment.CENTER,  # Центрування по вертикалі в колонці
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER,  # Центрування по горизонталі
-        expand=True  # Колонка розтягнеться на всю висоту сторінки
-    )
-
-    page.add(main_layout)
 
 if __name__ == "__main__":
     ft.run(main)
