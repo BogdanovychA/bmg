@@ -4,6 +4,7 @@ import flet as ft
 import requests
 
 import elements
+from config import TEXT_SIZE, TITLE_SIZE
 from utils import is_int
 
 ROUTE = "/next-number"
@@ -26,7 +27,7 @@ def get_sequence(length):
     except (requests.exceptions.RequestException, Exception) as e:
         text = f"Сталася помилка при запиті до API: {e}"
         print(text)
-        return (("Головне питання життя, всесвіту і всього такого", 42), text)
+        return ("Головне питання життя, всесвіту і всього такого", 42), text
 
 
 def build_view(page: ft.Page) -> ft.View:
@@ -46,28 +47,55 @@ def build_view(page: ft.Page) -> ft.View:
         answer_block.value = str(target_value)
         event.page.update()
 
-    description = "Визнач, що це за послідовність та яке число має бути наступним:"
+    def _rerun(event: ft.ControlEvent):
+        _init()
+        answer_block.value = ""
+        message_block.value = ""
+        event.page.update()
 
-    sequence, hint = get_sequence(6)
-    *quest_numbers, target_value = sequence
-    quest = ", ".join(map(str, quest_numbers))
+    def _init():
+        nonlocal target_value, hint
+        sequence, hint = get_sequence(6)
+        *quest_numbers, target_value = sequence
+        quest_block.value = ",   ".join(map(str, quest_numbers))
 
+    description = "Визнач, що це за послідовність\nта яке число має бути наступним:"
+    target_value = None
+    hint = ""
+    quest_block = ft.Text("", size=TEXT_SIZE)
     answer_block = ft.TextField(value="", width=100)
-    message_block = ft.Text("")
+    message_block = ft.Text("", size=TEXT_SIZE)
+
+    _init()
 
     return ft.View(
         route=ROUTE,
         vertical_alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            ft.AppBar(title=ft.Text(TITLE), center_title=True),
-            ft.Text(description),
-            ft.Text(quest),
-            answer_block,
+            ft.AppBar(
+                title=ft.Text(TITLE, size=TITLE_SIZE, weight=ft.FontWeight.BOLD),
+                center_title=True,
+            ),
+            ft.Text(""),
+            ft.Text(description, size=TEXT_SIZE),
+            quest_block,
             message_block,
-            ft.Button("Підтвердити", on_click=_ok),
-            ft.Button("Підказка", on_click=_hint),
-            ft.Button("Відповідь", on_click=_answer),
+            ft.Row(
+                [
+                    ft.IconButton(ft.Icons.REFRESH, on_click=_rerun),
+                    answer_block,
+                    ft.IconButton(ft.Icons.DONE_OUTLINE, on_click=_ok),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
+            ft.Row(
+                [
+                    ft.Button("Підказка", on_click=_hint),
+                    ft.Button("Відповідь", on_click=_answer),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
             ft.Text(""),
             elements.back_button(page),
         ],

@@ -6,6 +6,7 @@ import flet as ft
 
 import games.next_number as next_number
 import root
+from config import TEXT_SIZE, TITLE_SIZE
 
 
 def build_main_view(page: ft.Page) -> ft.View:
@@ -14,8 +15,13 @@ def build_main_view(page: ft.Page) -> ft.View:
         vertical_alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            ft.AppBar(title=ft.Text(root.TITLE), center_title=True),
-            ft.Text("Обери гру, в яку хочеш зіграти:"),
+            ft.AppBar(
+                title=ft.Text(root.TITLE, size=TITLE_SIZE, weight=ft.FontWeight.BOLD),
+                center_title=True,
+            ),
+            ft.Text(""),
+            ft.Text("Обери гру, в яку хочеш зіграти:", size=TEXT_SIZE),
+            ft.Text(""),
             ft.Button(
                 next_number.TITLE,
                 on_click=lambda: asyncio.create_task(
