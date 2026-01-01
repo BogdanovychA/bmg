@@ -1,26 +1,30 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
+
 import flet as ft
-import root
+
 import games.next_number as next_number
+import root
+
 
 def build_main_view(page: ft.Page) -> ft.View:
     return ft.View(
-                route=root.ROUTE,
-                vertical_alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                controls=[
-                    ft.AppBar(title=ft.Text(root.TITLE), center_title=True),
-                    ft.Text("Обери гру, в яку хочеш зіграти:"),
-                    ft.Button(
-                        next_number.TITLE,
-                        on_click=lambda: asyncio.create_task(
-                            page.push_route(next_number.ROUTE)
-                        ),
-                    ),
-                ],
-            )
+        route=root.ROUTE,
+        vertical_alignment=ft.MainAxisAlignment.CENTER,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        controls=[
+            ft.AppBar(title=ft.Text(root.TITLE), center_title=True),
+            ft.Text("Обери гру, в яку хочеш зіграти:"),
+            ft.Button(
+                next_number.TITLE,
+                on_click=lambda: asyncio.create_task(
+                    page.push_route(next_number.ROUTE)
+                ),
+            ),
+        ],
+    )
+
 
 def main(page: ft.Page):
     page.title = root.TITLE
@@ -28,13 +32,9 @@ def main(page: ft.Page):
 
     def route_change(e=None):
         page.views.clear()
-        page.views.append(
-            build_main_view(page)
-        )
+        page.views.append(build_main_view(page))
         if page.route == next_number.ROUTE:
-            page.views.append(
-                next_number.build_view(page)
-            )
+            page.views.append(next_number.build_view(page))
         page.update()
 
     async def view_pop(e):
@@ -51,4 +51,3 @@ def main(page: ft.Page):
 
 if __name__ == "__main__":
     ft.run(main)
-

@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 import flet as ft
-import elements
 import requests
+
+import elements
 from utils import is_int
 
 ROUTE = "/next-number"
 TITLE = "Вгадай наступне число"
+
 
 def get_sequence(length):
 
@@ -24,9 +26,8 @@ def get_sequence(length):
     except (requests.exceptions.RequestException, Exception) as e:
         text = f"Сталася помилка при запиті до API: {e}"
         print(text)
-        return (
-            ("Головне питання життя, всесвіту і всього такого", 42), text
-        )
+        return (("Головне питання життя, всесвіту і всього такого", 42), text)
+
 
 def build_view(page: ft.Page) -> ft.View:
 
@@ -55,19 +56,19 @@ def build_view(page: ft.Page) -> ft.View:
     message_block = ft.Text("")
 
     return ft.View(
-                route=ROUTE,
-                vertical_alignment=ft.MainAxisAlignment.CENTER,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                controls=[
-                    ft.AppBar(title=ft.Text(TITLE), center_title=True),
-                    ft.Text(description),
-                    ft.Text(quest),
-                    answer_block,
-                    message_block,
-                    ft.Button("Підтвердити", on_click=_ok),
-                    ft.Button("Підказка", on_click=_hint),
-                    ft.Button("Відповідь", on_click=_answer),
-                    ft.Text(""),
-                    elements.back_button(page),
-                ],
-            )
+        route=ROUTE,
+        vertical_alignment=ft.MainAxisAlignment.CENTER,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        controls=[
+            ft.AppBar(title=ft.Text(TITLE), center_title=True),
+            ft.Text(description),
+            ft.Text(quest),
+            answer_block,
+            message_block,
+            ft.Button("Підтвердити", on_click=_ok),
+            ft.Button("Підказка", on_click=_hint),
+            ft.Button("Відповідь", on_click=_answer),
+            ft.Text(""),
+            elements.back_button(page),
+        ],
+    )
