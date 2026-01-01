@@ -26,7 +26,7 @@ def main(page: ft.Page):
     page.title = root.TITLE
     page.theme_mode = ft.ThemeMode.DARK
 
-    def route_change(e):
+    def route_change(e=None):
         page.views.clear()
         page.views.append(
             build_main_view(page)
@@ -46,7 +46,7 @@ def main(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = view_pop
 
-    route_change(None)
+    route_change()
 
 
 if __name__ == "__main__":
