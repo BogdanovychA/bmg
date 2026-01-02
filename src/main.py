@@ -37,6 +37,7 @@ def build_main_view(page: ft.Page) -> ft.View:
 def main(page: ft.Page):
     page.title = root.TITLE
     page.theme_mode = ft.ThemeMode.DARK
+    page.route = root.ROUTE
 
     def route_change():
         page.views.clear()

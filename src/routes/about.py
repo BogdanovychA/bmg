@@ -3,10 +3,10 @@
 import flet as ft
 
 from utils import elements
-from utils.config import TEXT_SIZE
+from utils.config import BASE_URL, TEXT_SIZE
 
 TITLE = "Про автора"
-ROUTE = "/about"
+ROUTE = BASE_URL + "/about"
 
 
 def build_view(page: ft.Page) -> ft.View:
