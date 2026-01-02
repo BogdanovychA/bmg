@@ -5,7 +5,7 @@ import asyncio
 import flet as ft
 
 import games.next_number as next_number
-from routes import about, root
+from routes import about, error404, root
 from utils import elements
 from utils.config import TEXT_SIZE
 
@@ -47,7 +47,8 @@ def main(page: ft.Page):
             case about.ROUTE:
                 page.views.append(about.build_view(page))
             case _:
-                pass
+                if page.route != root.ROUTE:
+                    page.views.append(error404.build_view(page))
 
         page.update()
 
@@ -64,4 +65,4 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main, assets_dir="../assets")
+    ft.run(main, assets_dir="assets")
