@@ -32,22 +32,22 @@ def get_sequence(length):
 
 def build_view(page: ft.Page) -> ft.View:
 
-    def _ok(event: ft.ControlEvent):
+    def _ok(event: ft.Event) -> None:
         if is_int(answer_block.value) and int(answer_block.value) == target_value:
             message_block.value = f"Правильно! {hint}"
         else:
             message_block.value = "Не вгадав!"
         event.page.update()
 
-    def _hint(event: ft.ControlEvent):
+    def _hint(event: ft.Event) -> None:
         message_block.value = hint
         event.page.update()
 
-    def _answer(event: ft.ControlEvent):
+    def _answer(event: ft.Event) -> None:
         answer_block.value = str(target_value)
         event.page.update()
 
-    def _rerun(event: ft.ControlEvent):
+    def _rerun(event: ft.Event) -> None:
         _init()
         answer_block.value = ""
         message_block.value = ""
@@ -70,7 +70,6 @@ def build_view(page: ft.Page) -> ft.View:
 
     return ft.View(
         route=ROUTE,
-        # vertical_alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(TITLE),

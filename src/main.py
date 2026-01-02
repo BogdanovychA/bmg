@@ -5,7 +5,7 @@ import asyncio
 import flet as ft
 
 import games.next_number as next_number
-from routs import root
+from routs import about, root
 from utils import elements
 from utils.config import TEXT_SIZE
 
@@ -13,7 +13,6 @@ from utils.config import TEXT_SIZE
 def build_main_view(page: ft.Page) -> ft.View:
     return ft.View(
         route=root.ROUTE,
-        # vertical_alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(root.TITLE),
@@ -25,6 +24,11 @@ def build_main_view(page: ft.Page) -> ft.View:
                 on_click=lambda: asyncio.create_task(
                     page.push_route(next_number.ROUTE)
                 ),
+            ),
+            ft.Text(""),
+            ft.Button(
+                about.TITLE,
+                on_click=lambda: asyncio.create_task(page.push_route(about.ROUTE)),
             ),
         ],
     )
@@ -40,8 +44,11 @@ def main(page: ft.Page):
         match page.route:
             case next_number.ROUTE:
                 page.views.append(next_number.build_view(page))
-                # if page.route == next_number.ROUTE:
-        #     page.views.append(next_number.build_view(page))
+            case about.ROUTE:
+                page.views.append(about.build_view(page))
+            case _:
+                pass
+
         page.update()
 
     async def view_pop(e):
