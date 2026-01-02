@@ -18,6 +18,7 @@ def build_view(page: ft.Page) -> ft.View:
             elements.app_bar(TITLE),
             ft.Text(""),
             ft.Text(TITLE, size=TEXT_SIZE),
+            ft.Text(f"Цільова сторінка: {page.route}"),
             ft.Text(""),
             elements.back_button(page),
         ],
