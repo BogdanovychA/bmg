@@ -4,8 +4,8 @@ import asyncio
 
 import flet as ft
 
-import root
-from config import TITLE_SIZE
+from routs import root
+from utils.config import TITLE_SIZE
 
 
 def back_button(page):

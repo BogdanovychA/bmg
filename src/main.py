@@ -4,10 +4,10 @@ import asyncio
 
 import flet as ft
 
-import elements
 import games.next_number as next_number
-import root
-from config import TEXT_SIZE, TITLE_SIZE
+from routs import root
+from utils import elements
+from utils.config import TEXT_SIZE
 
 
 def build_main_view(page: ft.Page) -> ft.View:
@@ -34,11 +34,14 @@ def main(page: ft.Page):
     page.title = root.TITLE
     page.theme_mode = ft.ThemeMode.DARK
 
-    def route_change(e=None):
+    def route_change():
         page.views.clear()
         page.views.append(build_main_view(page))
-        if page.route == next_number.ROUTE:
-            page.views.append(next_number.build_view(page))
+        match page.route:
+            case next_number.ROUTE:
+                page.views.append(next_number.build_view(page))
+                # if page.route == next_number.ROUTE:
+        #     page.views.append(next_number.build_view(page))
         page.update()
 
     async def view_pop(e):

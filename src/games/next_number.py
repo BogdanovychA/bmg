@@ -3,9 +3,9 @@
 import flet as ft
 import requests
 
-import elements
-from config import TEXT_SIZE, TITLE_SIZE
-from utils import is_int
+from utils import elements
+from utils.config import TEXT_SIZE
+from utils.utils import is_int
 
 ROUTE = "/next-number"
 TITLE = "Вгадай наступне число"
