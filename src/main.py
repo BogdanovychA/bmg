@@ -4,6 +4,7 @@ import asyncio
 
 import flet as ft
 
+import elements
 import games.next_number as next_number
 import root
 from config import TEXT_SIZE, TITLE_SIZE
@@ -12,13 +13,10 @@ from config import TEXT_SIZE, TITLE_SIZE
 def build_main_view(page: ft.Page) -> ft.View:
     return ft.View(
         route=root.ROUTE,
-        vertical_alignment=ft.MainAxisAlignment.CENTER,
+        # vertical_alignment=ft.MainAxisAlignment.CENTER,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            ft.AppBar(
-                title=ft.Text(root.TITLE, size=TITLE_SIZE, weight=ft.FontWeight.BOLD),
-                center_title=True,
-            ),
+            elements.app_bar(root.TITLE),
             ft.Text(""),
             ft.Text("Обери гру, в яку хочеш зіграти:", size=TEXT_SIZE),
             ft.Text(""),
