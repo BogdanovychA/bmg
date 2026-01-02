@@ -18,10 +18,18 @@ def build_view(page: ft.Page) -> ft.View:
             elements.app_bar(TITLE),
             ft.Text("Андрій БОГДАНОВИЧ", size=TEXT_SIZE),
             ft.Text(""),
+            ft.Image(
+                src="/images/bogdanovych.jpg",  # Посилання на картинку
+                width=200,
+                height=200,
+            ),
+            ft.Text(""),
             ft.Text(
                 size=TEXT_SIZE,
                 spans=[
-                    elements.link("www.bogdanovych.org", "https://www.bogdanovych.org"),
+                    elements.link("Домашня сторінка", "https://www.bogdanovych.org"),
+                    ft.TextSpan("\n"),
+                    elements.link("GitHub", "https://github.com/BogdanovychA/"),
                 ],
             ),
             ft.Text(""),

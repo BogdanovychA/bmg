@@ -4,7 +4,7 @@ import asyncio
 
 import flet as ft
 
-from routs import root
+from routes import root
 from utils.config import LINK_COLOR, TITLE_SIZE
 
 
@@ -27,8 +27,8 @@ def link(text: str, url: str) -> ft.TextSpan:
     style_normal = ft.TextStyle(decoration=ft.TextDecoration.NONE, color=LINK_COLOR)
     style_hover = ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE, color=LINK_COLOR)
 
-    def _handler(e: ft.Event) -> None:
-        span.style = style_hover if e.name == "enter" else style_normal
+    def _handler(event: ft.Event) -> None:
+        span.style = style_hover if event.name == "enter" else style_normal
         span.update()
 
     span = ft.TextSpan(

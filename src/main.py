@@ -5,7 +5,7 @@ import asyncio
 import flet as ft
 
 import games.next_number as next_number
-from routs import about, root
+from routes import about, root
 from utils import elements
 from utils.config import TEXT_SIZE
 
@@ -64,4 +64,4 @@ def main(page: ft.Page):
 
 
 if __name__ == "__main__":
-    ft.run(main)
+    ft.run(main, assets_dir="../assets")
