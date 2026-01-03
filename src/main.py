@@ -7,7 +7,7 @@ import flet as ft
 import games.next_number as next_number
 from routes import about, error404, root
 from utils import elements
-from utils.config import TEXT_SIZE
+from utils.config import BASE_URL, TEXT_SIZE
 
 
 def build_main_view(page: ft.Page) -> ft.View:
