@@ -4,7 +4,7 @@ import flet as ft
 import requests
 
 from utils import elements
-from utils.config import TEXT_SIZE
+from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
 from utils.utils import is_int
 
 ROUTE = "/next-number"
@@ -77,7 +77,9 @@ def build_view(page: ft.Page) -> ft.View:
     target_value = None
     hint = ""
     quest_block = ft.Text("", size=TEXT_SIZE)
-    answer_block = ft.TextField(value="", width=100)
+    answer_block = ft.TextField(
+        value="", width=100, bgcolor=FORM_BG_COLOR, border_color=FORM_BORDER_COLOR
+    )
     message_block = ft.Text("", size=TEXT_SIZE)
 
     _init()
