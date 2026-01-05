@@ -13,7 +13,7 @@ TITLE = "Вгадай наступне число"
 
 def get_sequence(length, difficulty):
 
-    target_url = f"https://karatel.ua/api/next_number/get/{length}"
+    target_url = f"https://karatel.ua/api/next-number/get/{length}"
     query_params = {
         "difficulty": difficulty,
         # "random": "true"
