@@ -11,11 +11,11 @@ ROUTE = "/next-number"
 TITLE = "Вгадай наступне число"
 
 
-def get_sequence(length):
+def get_sequence(length, difficulty):
 
     target_url = f"https://karatel.ua/api/next_number/get/{length}"
     query_params = {
-        "difficulty": "easy",
+        "difficulty": difficulty,
         # "random": "true"
     }
 
@@ -55,9 +55,23 @@ def build_view(page: ft.Page) -> ft.View:
 
     def _init():
         nonlocal target_value, hint
-        sequence, hint = get_sequence(6)
+        sequence, hint = get_sequence(6, difficulty_block.value)
         *quest_numbers, target_value = sequence
         quest_block.value = ",   ".join(map(str, quest_numbers))
+
+    difficulty_block = ft.Dropdown(
+        label="Складність",
+        label_style=ft.TextStyle(size=TEXT_SIZE),
+        value="random",
+        options=[
+            ft.DropdownOption(key="easy", text="Низька"),
+            ft.DropdownOption(key="medium", text="Середня"),
+            ft.DropdownOption(key="hard", text="Висока"),
+            ft.DropdownOption(key="expert", text="Надвисока"),
+            ft.DropdownOption(key="random", text="Випадкова"),
+        ],
+        on_select=_rerun,
+    )
 
     description = "Визнач, що це за послідовність\nта яке число має бути наступним:"
     target_value = None
@@ -77,6 +91,7 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text(description, size=TEXT_SIZE),
             quest_block,
             message_block,
+            ft.Text(""),
             ft.Row(
                 [
                     ft.IconButton(ft.Icons.REFRESH, on_click=_rerun),
@@ -85,6 +100,9 @@ def build_view(page: ft.Page) -> ft.View:
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
+            ft.Text(""),
+            difficulty_block,
+            ft.Text(""),
             ft.Row(
                 [
                     ft.Button("Підказка", on_click=_hint),
