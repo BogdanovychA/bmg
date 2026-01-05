@@ -1,4 +1,4 @@
-flet>=0.80.0
+flet>=0.80.1
 pyinstaller>=6.17.0
 requests>=2.32.5
 pre_commit>=4.4.0

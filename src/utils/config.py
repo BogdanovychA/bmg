@@ -7,4 +7,4 @@ TEXT_SIZE = 20
 
 LINK_COLOR = ft.Colors.BLUE
 
-BASE_URL = ""
+BASE_URL = "/corp/bmg"
