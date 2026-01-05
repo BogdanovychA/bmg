@@ -29,7 +29,7 @@ def build_view(page: ft.Page) -> ft.View:
                 spans=[
                     elements.link("Домашня сторінка", "https://www.bogdanovych.org"),
                     ft.TextSpan("\n"),
-                    elements.link("GitHub", "https://github.com/BogdanovychA/"),
+                    elements.link("GitHub", "https://github.com/BogdanovychA/bmg"),
                 ],
             ),
             ft.Text(""),
