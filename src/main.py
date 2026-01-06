@@ -4,19 +4,19 @@ import asyncio
 
 import flet as ft
 
-import routes
 from games import next_number, tic_tac_toe
+from routes import about, error404, root
 from utils import elements
 from utils.config import TEXT_SIZE
 
 
 def build_main_view(page: ft.Page) -> ft.View:
-    page.title = routes.root.TITLE
+    page.title = root.TITLE
     return ft.View(
-        route=routes.root.ROUTE,
+        route=root.ROUTE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(routes.root.TITLE),
+            elements.app_bar(root.TITLE),
             ft.Text(""),
             ft.Text("Обери гру, в яку хочеш зіграти:", size=TEXT_SIZE),
             ft.Text(""),
@@ -33,15 +33,15 @@ def build_main_view(page: ft.Page) -> ft.View:
                 ),
             ),
             ft.Text(""),
-            routes.about.button(page),
+            about.button(page),
         ],
     )
 
 
 def main(page: ft.Page):
-    page.title = routes.root.TITLE
+    page.title = root.TITLE
     page.theme_mode = ft.ThemeMode.DARK
-    page.route = routes.root.ROUTE
+    page.route = root.ROUTE
 
     def route_change():
         page.views.clear()
@@ -51,11 +51,11 @@ def main(page: ft.Page):
                 page.views.append(next_number.build_view(page))
             case tic_tac_toe.ROUTE:
                 page.views.append(tic_tac_toe.build_view(page))
-            case routes.about.ROUTE:
-                page.views.append(routes.about.build_view(page))
+            case about.ROUTE:
+                page.views.append(about.build_view(page))
             case _:
-                if page.route != routes.root.ROUTE:
-                    page.views.append(routes.error404.build_view(page))
+                if page.route != root.ROUTE:
+                    page.views.append(error404.build_view(page))
 
         page.update()
 
