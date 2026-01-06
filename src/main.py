@@ -4,18 +4,19 @@ import asyncio
 
 import flet as ft
 
-import games.next_number as next_number
-from routes import about, error404, root
+import routes
+from games import next_number, tic_tac_toe
 from utils import elements
 from utils.config import TEXT_SIZE
 
 
 def build_main_view(page: ft.Page) -> ft.View:
+    page.title = routes.root.TITLE
     return ft.View(
-        route=root.ROUTE,
+        route=routes.root.ROUTE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(root.TITLE),
+            elements.app_bar(routes.root.TITLE),
             ft.Text(""),
             ft.Text("Обери гру, в яку хочеш зіграти:", size=TEXT_SIZE),
             ft.Text(""),
@@ -25,19 +26,22 @@ def build_main_view(page: ft.Page) -> ft.View:
                     page.push_route(next_number.ROUTE)
                 ),
             ),
-            ft.Text(""),
             ft.Button(
-                about.TITLE,
-                on_click=lambda: asyncio.create_task(page.push_route(about.ROUTE)),
+                tic_tac_toe.TITLE,
+                on_click=lambda: asyncio.create_task(
+                    page.push_route(tic_tac_toe.ROUTE)
+                ),
             ),
+            ft.Text(""),
+            routes.about.button(page),
         ],
     )
 
 
 def main(page: ft.Page):
-    page.title = root.TITLE
+    page.title = routes.root.TITLE
     page.theme_mode = ft.ThemeMode.DARK
-    page.route = root.ROUTE
+    page.route = routes.root.ROUTE
 
     def route_change():
         page.views.clear()
@@ -45,11 +49,13 @@ def main(page: ft.Page):
         match page.route:
             case next_number.ROUTE:
                 page.views.append(next_number.build_view(page))
-            case about.ROUTE:
-                page.views.append(about.build_view(page))
+            case tic_tac_toe.ROUTE:
+                page.views.append(tic_tac_toe.build_view(page))
+            case routes.about.ROUTE:
+                page.views.append(routes.about.build_view(page))
             case _:
-                if page.route != root.ROUTE:
-                    page.views.append(error404.build_view(page))
+                if page.route != routes.root.ROUTE:
+                    page.views.append(routes.error404.build_view(page))
 
         page.update()
 

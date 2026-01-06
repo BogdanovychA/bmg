@@ -3,6 +3,7 @@
 import flet as ft
 import requests
 
+from routes import about
 from utils import elements
 from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
 from utils.utils import is_int
@@ -73,6 +74,8 @@ def build_view(page: ft.Page) -> ft.View:
         on_select=_rerun,
     )
 
+    page.title = TITLE
+
     description = "Визнач, що це за послідовність\nта яке число має бути наступним:"
     target_value = None
     hint = ""
@@ -114,5 +117,6 @@ def build_view(page: ft.Page) -> ft.View:
             ),
             ft.Text(""),
             elements.back_button(page),
+            about.button(page),
         ],
     )

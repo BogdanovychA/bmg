@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import asyncio
+
 import flet as ft
 
 from utils import elements
@@ -9,8 +11,15 @@ TITLE = "Про автора"
 ROUTE = BASE_URL + "/about"
 
 
-def build_view(page: ft.Page) -> ft.View:
+def button(page) -> ft.Button:
+    return ft.Button(
+        TITLE,
+        on_click=lambda: asyncio.create_task(page.push_route(ROUTE)),
+    )
 
+
+def build_view(page: ft.Page) -> ft.View:
+    page.title = TITLE
     return ft.View(
         route=ROUTE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
