@@ -29,21 +29,81 @@ CELL_RADIUS = 10
 EMPTY_BOARD = [Symbol.EMPTY.value] * 9
 
 
+def check_winner(board: list) -> str:
+
+    target_url = "https://karatel.ua/api/ttt/check"
+
+    payload = board
+
+    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+
+    try:
+        response = requests.post(target_url, json=payload, headers=headers)
+        response.raise_for_status()
+        return response.json()["result"]
+
+    except (requests.exceptions.RequestException, Exception) as e:
+        text = f"Сталася помилка при запиті до API: {e}"
+        print(text)
+        return text
+
+
+def best_move(board: list, player: str) -> int | str:
+
+    target_url = "https://karatel.ua/api/ttt/move"
+
+    payload = {"board": board, "max_player_symbol": player}
+
+    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
+
+    try:
+        response = requests.post(target_url, json=payload, headers=headers)
+        response.raise_for_status()
+        return response.json()
+
+    except (requests.exceptions.RequestException, Exception) as e:
+        text = f"Сталася помилка при запиті до API: {e}"
+        print(text)
+        return text
+
+
 def build_view(page: ft.Page) -> ft.View:
 
-    def _init() -> None:
-        pass
+    def _set_ai() -> None:
+        nonlocal ai
+        ai = Symbol.O.value if player == Symbol.X.value else Symbol.X.value
 
     def _click(event: ft.Event) -> None:
 
+        if board[event.control.data] != Symbol.EMPTY.value:
+            return
+
         board[event.control.data] = player
         board_layout.controls = _render_board()
+
+        winner = check_winner(board)
+
+        match winner:
+            case Symbol.X.value | Symbol.O.value:
+                message_block.value = f"Перемога {winner}"
+            case "draw":
+                message_block.value = "Нічия"
+            case "none" | _:
+                ai_move = best_move(board, ai)
+                if isinstance(ai_move, str):
+                    message_block.value = ai_move
+                elif isinstance(ai_move, int):
+                    board[ai_move] = ai
+                    board_layout.controls = _render_board()
+                else:
+                    print("Непередбачуваний тип")
 
         event.page.update()
 
     def _switch(event: ft.Event) -> None:
         nonlocal player, board
         player = event.control.selected[0]
+        _set_ai()
         _rerun(event)
 
         # Тимчасовий коментар. Все, що далі робить: _rerun(event)
@@ -56,6 +116,7 @@ def build_view(page: ft.Page) -> ft.View:
         nonlocal board
         board = EMPTY_BOARD.copy()
         board_layout.controls = _render_board()
+        message_block.value = ""
 
         event.page.update()
 
@@ -113,12 +174,15 @@ def build_view(page: ft.Page) -> ft.View:
 
     board = EMPTY_BOARD.copy()
     player = Symbol.X.value
+    ai = Symbol.O.value
     page.title = TITLE
 
     board_layout = ft.Column(
         controls=_render_board(),
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     )
+
+    message_block = ft.Text("", size=TEXT_SIZE)
 
     return ft.View(
         route=ROUTE,
@@ -136,6 +200,7 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text(""),
             board_layout,
             ft.Text(""),
+            message_block,
             ft.Text(""),
             elements.back_button(page),
             about.button(page),
