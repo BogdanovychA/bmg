@@ -28,17 +28,18 @@ CELL_RADIUS = 10
 
 EMPTY_BOARD = [Symbol.EMPTY.value] * 9
 
+BASE_API_URL = "https://karatel.ua/api/ttt"
+API_HEADERS = {'accept': 'application/json', 'Content-Type': 'application/json'}
+
 
 def check_winner(board: list) -> str:
 
-    target_url = "https://karatel.ua/api/ttt/check"
-
+    target_url = f"{BASE_API_URL}/check"
+    headers = API_HEADERS
     payload = board
 
-    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
-
     try:
-        response = requests.post(target_url, json=payload, headers=headers)
+        response = requests.post(target_url, headers=headers, json=payload)
         response.raise_for_status()
         return response.json()["result"]
 
@@ -50,14 +51,16 @@ def check_winner(board: list) -> str:
 
 def best_move(board: list, player: str) -> int | str:
 
-    target_url = "https://karatel.ua/api/ttt/move"
-
+    target_url = f"{BASE_API_URL}/move"
+    headers = API_HEADERS
     payload = {"board": board, "max_player_symbol": player}
 
-    headers = {'accept': 'application/json', 'Content-Type': 'application/json'}
-
     try:
-        response = requests.post(target_url, json=payload, headers=headers)
+        response = requests.post(
+            target_url,
+            headers=headers,
+            json=payload,
+        )
         response.raise_for_status()
         return response.json()
 
@@ -69,16 +72,14 @@ def best_move(board: list, player: str) -> int | str:
 
 def build_view(page: ft.Page) -> ft.View:
 
-    def _set_ai() -> None:
-        nonlocal ai
-        ai = Symbol.O.value if player == Symbol.X.value else Symbol.X.value
+    def _set_ai() -> str:
+        return Symbol.O.value if player == Symbol.X.value else Symbol.X.value
 
     def _check_game_status() -> None:
 
         nonlocal game_finished
 
         winner = check_winner(board)
-
         match winner:
             case Symbol.X.value | Symbol.O.value:
                 message_block.value = f"Перемога {winner}"
@@ -86,6 +87,19 @@ def build_view(page: ft.Page) -> ft.View:
             case "draw":
                 message_block.value = "Нічия"
                 game_finished = True
+
+    def _ai_move() -> None:
+
+        ai_move = best_move(board, ai)
+
+        if isinstance(ai_move, str):  # Якщо помилка API
+            message_block.value = ai_move
+        elif isinstance(ai_move, int):
+            board[ai_move] = ai
+            board_layout.controls = _render_board()
+            board_layout.update()
+        else:  # Інша непердбачувана помилка (вірогідність дуже низька)
+            print("Непередбачуваний тип")
 
     def _click(event: ft.Event) -> None:
 
@@ -97,44 +111,26 @@ def build_view(page: ft.Page) -> ft.View:
 
         board[event.control.data] = player
         board_layout.controls = _render_board()
-
+        board_layout.update()
         _check_game_status()
 
         if game_finished:
             return
 
-        ai_move = best_move(board, ai)
+        _ai_move()
 
-        if isinstance(ai_move, str):
-            message_block.value = ai_move
-        elif isinstance(ai_move, int):
-            board[ai_move] = ai
-            board_layout.controls = _render_board()
-            _check_game_status()
-        else:
-            print("Непередбачуваний тип")
-
-        event.page.update()
+        _check_game_status()
 
     def _switch(event: ft.Event) -> None:
-        nonlocal player, board
-        player = event.control.selected[0]
-        _set_ai()
-        _rerun(event)
 
-        # Тимчасовий коментар. Все, що далі робить: _rerun(event)
-        # board = EMPTY_BOARD.copy()
-        # board_layout.controls = _render_board()
-        # event.page.update()
+        _init(event.control.selected[0])
+        board_layout.controls = _render_board()
+        event.page.update()
 
     def _rerun(event: ft.Event) -> None:
 
-        nonlocal board, game_finished
-        board = EMPTY_BOARD.copy()
+        _init(player)
         board_layout.controls = _render_board()
-        message_block.value = ""
-        game_finished = False
-
         event.page.update()
 
     def _icon(icon: str) -> ft.Icon | None:
@@ -189,18 +185,33 @@ def build_view(page: ft.Page) -> ft.View:
         on_change=_switch,
     )
 
-    board = EMPTY_BOARD.copy()
-    player = Symbol.X.value
-    ai = Symbol.O.value
-    game_finished = False
+    def _init(player_symbol: str) -> None:
+
+        nonlocal player, ai, board, game_finished
+        board = EMPTY_BOARD.copy()
+        player = player_symbol
+        ai = _set_ai()
+        game_finished = False
+        message_block.value = ""
+
+        if player == Symbol.O.value:
+            _ai_move()
+
+    board = list()
+    player = str()
+    ai = str()
+    game_finished = bool()
+
+    message_block = ft.Text(size=TEXT_SIZE)
+
+    _init(Symbol.X.value)
+
     page.title = TITLE
 
     board_layout = ft.Column(
         controls=_render_board(),
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     )
-
-    message_block = ft.Text("", size=TEXT_SIZE)
 
     return ft.View(
         route=ROUTE,
