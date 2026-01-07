@@ -87,7 +87,6 @@ def build_view(page: ft.Page) -> ft.View:
                 message_block.value = "Нічия"
                 game_finished = True
 
-
     def _click(event: ft.Event) -> None:
 
         if game_finished:
