@@ -46,6 +46,7 @@ def build_view(page: ft.Page) -> ft.View:
         player = event.control.selected[0]
         _rerun(event)
 
+        # Тимчасовий коментар. Все, що далі робить: _rerun(event)
         # board = EMPTY_BOARD.copy()
         # board_layout.controls = _render_board()
         # event.page.update()
@@ -117,7 +118,6 @@ def build_view(page: ft.Page) -> ft.View:
     board_layout = ft.Column(
         controls=_render_board(),
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-        spacing=10,
     )
 
     return ft.View(
