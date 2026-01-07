@@ -88,12 +88,15 @@ def build_view(page: ft.Page) -> ft.View:
                 message_block.value = "Нічия"
                 game_finished = True
 
+        message_block.update()
+
     def _ai_move() -> None:
 
         ai_move = best_move(board, ai)
 
         if isinstance(ai_move, str):  # Якщо помилка API
             message_block.value = ai_move
+            message_block.update()
         elif isinstance(ai_move, int):
             board[ai_move] = ai
             board_layout.controls = _render_board()
