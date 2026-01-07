@@ -28,7 +28,7 @@ def get_sequence(length, difficulty):
     except (requests.exceptions.RequestException, Exception) as e:
         text = f"Сталася помилка при запиті до API: {e}"
         print(text)
-        return ("Головне питання життя, всесвіту і всього такого", 42), text
+        return ("Найголовніше питання життя, Всесвіту та всього сущого", 42), text
 
 
 def build_view(page: ft.Page) -> ft.View:
