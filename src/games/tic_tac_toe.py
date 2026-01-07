@@ -24,29 +24,73 @@ O_COLOR = ft.Colors.RED_ACCENT
 
 BOARD_BG_COLOR = ft.Colors.ON_SURFACE_VARIANT
 CELL_SIZE = 50
-CELL_RADIUS = 15
+CELL_RADIUS = 10
+
+EMPTY_BOARD = [Symbol.EMPTY.value] * 9
 
 
 def build_view(page: ft.Page) -> ft.View:
 
-    def _rerun(event: ft.Event) -> None:
+    def _init() -> None:
+        pass
+
+    def _click(event: ft.Event) -> None:
+
+        board[event.control.data] = player
+        board_layout.controls = _render_board()
+
         event.page.update()
 
-    def _cell(content: ft.Icon | None) -> ft.Container:
+    def _switch(event: ft.Event) -> None:
+        nonlocal player, board
+        player = event.control.selected[0]
+        _rerun(event)
+
+        # board = EMPTY_BOARD.copy()
+        # board_layout.controls = _render_board()
+        # event.page.update()
+
+    def _rerun(event: ft.Event) -> None:
+
+        nonlocal board
+        board = EMPTY_BOARD.copy()
+        board_layout.controls = _render_board()
+
+        event.page.update()
+
+    def _icon(icon: str) -> ft.Icon | None:
+
+        match icon:
+            case Symbol.X.value:
+                return ft.Icon(ft.Icons.CLOSE, color=X_COLOR)
+            case Symbol.O.value:
+                return ft.Icon(ft.Icons.CIRCLE_OUTLINED, color=O_COLOR)
+            case Symbol.EMPTY.value | _:
+                return None
+
+    def _cell(content: ft.Icon, data: int) -> ft.Container:
+
         return ft.Container(
             content=content,
-            data=Symbol.EMPTY.value,
+            data=data,
             width=CELL_SIZE,
             height=CELL_SIZE,
             bgcolor=BOARD_BG_COLOR,
             border_radius=CELL_RADIUS,
             alignment=ft.Alignment.CENTER,
             ink=True,
-            # animate_scale=ft.Animation(300, ft.AnimationCurve.BOUNCE_OUT),
+            on_click=_click,
         )
 
-    x_icon = ft.Icon(ft.Icons.CLOSE, color=X_COLOR)
-    o_icon = ft.Icon(ft.Icons.CIRCLE_OUTLINED, color=O_COLOR)
+    def _render_board() -> list:
+
+        return [
+            ft.Row(
+                [_cell(_icon(board[i]), i) for i in range(start, start + 3)],
+                alignment=ft.MainAxisAlignment.CENTER,
+            )
+            for start in range(0, 9, 3)
+        ]
 
     symbol_selector = ft.SegmentedButton(
         selected=[Symbol.X.value],
@@ -56,33 +100,25 @@ def build_view(page: ft.Page) -> ft.View:
         segments=[
             ft.Segment(
                 value=Symbol.X.value,
-                label=x_icon,
+                label=_icon(Symbol.X.value),
             ),
             ft.Segment(
                 value=Symbol.O.value,
-                label=o_icon,
+                label=_icon(Symbol.O.value),
             ),
         ],
-        on_change=_rerun,
+        on_change=_switch,
     )
 
-    game_board = ft.Column(
-        [
-            ft.Row(
-                [_cell(x_icon) for _ in range(3)], alignment=ft.MainAxisAlignment.CENTER
-            ),
-            ft.Row(
-                [_cell(None) for _ in range(3)], alignment=ft.MainAxisAlignment.CENTER
-            ),
-            ft.Row(
-                [_cell(o_icon) for _ in range(3)], alignment=ft.MainAxisAlignment.CENTER
-            ),
-        ],
+    board = EMPTY_BOARD.copy()
+    player = Symbol.X.value
+    page.title = TITLE
+
+    board_layout = ft.Column(
+        controls=_render_board(),
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         spacing=10,
     )
-
-    page.title = TITLE
 
     return ft.View(
         route=ROUTE,
@@ -90,9 +126,16 @@ def build_view(page: ft.Page) -> ft.View:
         controls=[
             elements.app_bar(TITLE),
             ft.Text("Обери за кого грати", size=TEXT_SIZE),
-            symbol_selector,
+            ft.Row(
+                [
+                    symbol_selector,
+                    ft.IconButton(ft.Icons.REFRESH, on_click=_rerun),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
             ft.Text(""),
-            game_board,
+            board_layout,
+            ft.Text(""),
             ft.Text(""),
             elements.back_button(page),
             about.button(page),
