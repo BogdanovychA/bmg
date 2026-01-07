@@ -73,7 +73,25 @@ def build_view(page: ft.Page) -> ft.View:
         nonlocal ai
         ai = Symbol.O.value if player == Symbol.X.value else Symbol.X.value
 
+    def _check_game_status() -> None:
+
+        nonlocal game_finished
+
+        winner = check_winner(board)
+
+        match winner:
+            case Symbol.X.value | Symbol.O.value:
+                message_block.value = f"Перемога {winner}"
+                game_finished = True
+            case "draw":
+                message_block.value = "Нічия"
+                game_finished = True
+
+
     def _click(event: ft.Event) -> None:
+
+        if game_finished:
+            return
 
         if board[event.control.data] != Symbol.EMPTY.value:
             return
@@ -81,22 +99,21 @@ def build_view(page: ft.Page) -> ft.View:
         board[event.control.data] = player
         board_layout.controls = _render_board()
 
-        winner = check_winner(board)
+        _check_game_status()
 
-        match winner:
-            case Symbol.X.value | Symbol.O.value:
-                message_block.value = f"Перемога {winner}"
-            case "draw":
-                message_block.value = "Нічия"
-            case "none" | _:
-                ai_move = best_move(board, ai)
-                if isinstance(ai_move, str):
-                    message_block.value = ai_move
-                elif isinstance(ai_move, int):
-                    board[ai_move] = ai
-                    board_layout.controls = _render_board()
-                else:
-                    print("Непередбачуваний тип")
+        if game_finished:
+            return
+
+        ai_move = best_move(board, ai)
+
+        if isinstance(ai_move, str):
+            message_block.value = ai_move
+        elif isinstance(ai_move, int):
+            board[ai_move] = ai
+            board_layout.controls = _render_board()
+            _check_game_status()
+        else:
+            print("Непередбачуваний тип")
 
         event.page.update()
 
@@ -113,10 +130,11 @@ def build_view(page: ft.Page) -> ft.View:
 
     def _rerun(event: ft.Event) -> None:
 
-        nonlocal board
+        nonlocal board, game_finished
         board = EMPTY_BOARD.copy()
         board_layout.controls = _render_board()
         message_block.value = ""
+        game_finished = False
 
         event.page.update()
 
@@ -175,6 +193,7 @@ def build_view(page: ft.Page) -> ft.View:
     board = EMPTY_BOARD.copy()
     player = Symbol.X.value
     ai = Symbol.O.value
+    game_finished = False
     page.title = TITLE
 
     board_layout = ft.Column(
