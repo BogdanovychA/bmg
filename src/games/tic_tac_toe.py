@@ -7,7 +7,7 @@ import requests
 
 from routes import about
 from utils import elements
-from utils.config import NUMBER_42, TEXT_SIZE
+from utils.config import API_URL, NUMBER_42, TEXT_SIZE
 
 ROUTE = "/tic-tac-toe"
 TITLE = "Хрестики-нулики"
@@ -29,7 +29,7 @@ CELL_RADIUS = 10
 
 EMPTY_BOARD = [Symbol.EMPTY.value] * 9
 
-BASE_API_URL = "https://karatel.ua/api/ttt"
+BASE_API_URL = f"{API_URL}/ttt"
 API_HEADERS = {'accept': 'application/json', 'Content-Type': 'application/json'}
 ERROR_TEXT = "Сталася помилка при запиті до API"
 

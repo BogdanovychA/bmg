@@ -5,7 +5,14 @@ import requests
 
 from routes import about
 from utils import elements
-from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, NUMBER_42, TEXT_42, TEXT_SIZE
+from utils.config import (
+    API_URL,
+    FORM_BG_COLOR,
+    FORM_BORDER_COLOR,
+    NUMBER_42,
+    TEXT_42,
+    TEXT_SIZE,
+)
 from utils.utils import is_int
 
 ROUTE = "/next-number"
@@ -15,7 +22,7 @@ SUB_TITLE = "Визнач, що це за послідовність\nта як�
 
 def get_sequence(length, difficulty):
 
-    target_url = f"https://karatel.ua/api/next-number/get/{length}"
+    target_url = f"{API_URL}/next-number/get/{length}"
     query_params = {
         "difficulty": difficulty,
         # "random": "true"
