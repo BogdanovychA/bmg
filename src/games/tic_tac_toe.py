@@ -214,10 +214,10 @@ def build_view(page: ft.Page) -> ft.View:
         if player == Symbol.O.value:
             _ai_move(ai)
 
-    board = list()
-    player = str()
-    ai = str()
-    game_finished = bool()
+    board = []
+    player = ""
+    ai = ""
+    game_finished = False
 
     message_block = ft.Text(size=TEXT_SIZE)
 
