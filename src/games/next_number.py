@@ -10,7 +10,7 @@ from utils.utils import is_int
 
 ROUTE = "/next-number"
 TITLE = "Вгадай наступне число"
-
+SUB_TITLE = "Визнач, що це за послідовність\nта яке число має бути наступним:"
 
 def get_sequence(length, difficulty):
 
@@ -76,7 +76,6 @@ def build_view(page: ft.Page) -> ft.View:
 
     page.title = TITLE
 
-    description = "Визнач, що це за послідовність\nта яке число має бути наступним:"
     target_value = None
     hint = ""
     quest_block = ft.Text("", size=TEXT_SIZE)
@@ -93,7 +92,7 @@ def build_view(page: ft.Page) -> ft.View:
         controls=[
             elements.app_bar(TITLE),
             ft.Text(""),
-            ft.Text(description, size=TEXT_SIZE),
+            ft.Text(SUB_TITLE, size=TEXT_SIZE),
             quest_block,
             message_block,
             ft.Text(""),

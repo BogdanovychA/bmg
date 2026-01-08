@@ -10,7 +10,7 @@ from utils.config import LINK_COLOR, TITLE_SIZE
 
 def back_button(page) -> ft.Button:
     return ft.Button(
-        "Перейти до списку ігор",
+        "Всі ігри",
         on_click=lambda: asyncio.create_task(page.push_route(root.ROUTE)),
     )
 
