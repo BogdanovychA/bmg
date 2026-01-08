@@ -5,7 +5,7 @@ import requests
 
 from routes import about
 from utils import elements
-from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
+from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, NUMBER_42, TEXT_42, TEXT_SIZE
 from utils.utils import is_int
 
 ROUTE = "/next-number"
@@ -29,7 +29,7 @@ def get_sequence(length, difficulty):
     except (requests.exceptions.RequestException, Exception) as e:
         text = f"Сталася помилка при запиті до API: {e}"
         print(text)
-        return ("Найголовніше питання життя, Всесвіту та всього сущого", 42), text
+        return (TEXT_42, NUMBER_42), text
 
 
 def build_view(page: ft.Page) -> ft.View:

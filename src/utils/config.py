@@ -13,3 +13,4 @@ FORM_BG_COLOR = ft.Colors.SURFACE_CONTAINER
 BASE_URL = ""
 
 NUMBER_42 = 42
+TEXT_42 = "Найголовніше питання життя, Всесвіту та всього сущого"
