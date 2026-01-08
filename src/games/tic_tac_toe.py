@@ -7,7 +7,7 @@ import requests
 
 from routes import about
 from utils import elements
-from utils.config import TEXT_SIZE
+from utils.config import NUMBER_42, TEXT_SIZE
 
 ROUTE = "/tic-tac-toe"
 TITLE = "Хрестики-нулики"
@@ -96,42 +96,48 @@ def build_view(page: ft.Page) -> ft.View:
 
         message_block.update()
 
-    def _ai_move() -> None:
+    def _ai_move(symbol) -> None:
 
         nonlocal game_finished
 
-        ai_move = best_move(board, ai)
+        ai_move = best_move(board, symbol)
 
         if isinstance(ai_move, str):  # Якщо помилка API
             message_block.value = ai_move
             message_block.update()
             game_finished = True
-        elif isinstance(ai_move, int):
-            board[ai_move] = ai
+        elif isinstance(ai_move, int):  # Основний робочий блок
+            board[ai_move] = symbol
             board_layout.controls = _render_board()
             board_layout.update()
         else:  # Інша непередбачувана помилка (вірогідність дуже низька)
             print("Непередбачуваний тип")
+
+        _check_game_status()
+
+    def _move_player(position: int, symbol: str) -> None:
+
+        board[position] = symbol
+        board_layout.controls = _render_board()
+        board_layout.update()
+        _check_game_status()
 
     def _click(event: ft.Event) -> None:
 
         if game_finished:
             return
 
-        if board[event.control.data] != Symbol.EMPTY.value:
-            return
-
-        board[event.control.data] = player
-        board_layout.controls = _render_board()
-        board_layout.update()
-        _check_game_status()
+        if event.control.data == NUMBER_42:
+            _ai_move(player)
+        else:
+            if board[event.control.data] != Symbol.EMPTY.value:
+                return
+            _move_player(event.control.data, player)
 
         if game_finished:
             return
 
-        _ai_move()
-
-        _check_game_status()
+        _ai_move(ai)
 
     def _switch(event: ft.Event) -> None:
 
@@ -170,7 +176,6 @@ def build_view(page: ft.Page) -> ft.View:
         )
 
     def _render_board() -> list:
-
         return [
             ft.Row(
                 [_cell(_icon(board[i]), i) for i in range(start, start + 3)],
@@ -207,7 +212,7 @@ def build_view(page: ft.Page) -> ft.View:
         message_block.value = ""
 
         if player == Symbol.O.value:
-            _ai_move()
+            _ai_move(ai)
 
     board = list()
     player = str()
@@ -239,9 +244,11 @@ def build_view(page: ft.Page) -> ft.View:
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
             ft.Text(""),
+            message_block,
+            ft.Text(""),
             board_layout,
             ft.Text(""),
-            message_block,
+            ft.Button("Автохід", on_click=_click, data=NUMBER_42),
             ft.Text(""),
             elements.back_button(page),
             about.button(page),
