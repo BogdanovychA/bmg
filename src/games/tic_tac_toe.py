@@ -226,7 +226,7 @@ def build_view(page: ft.Page) -> ft.View:
         player = player_symbol
         ai = _set_ai()
         game_finished = False
-        message_block.value = ""
+        message_block.value = "Зробіть свій хід:"
 
         if player == Symbol.O.value:  # Якщо ШІ грає за X -- одразу робимо хід
             _ai_move(ai)
