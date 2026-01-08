@@ -35,6 +35,7 @@ ERROR_TEXT = "Сталася помилка при запиті до API"
 
 
 def check_winner(board: list) -> str:
+    """Звернення до API для перевірки чи є переможець на дошці"""
 
     target_url = f"{BASE_API_URL}/check"
     headers = API_HEADERS
@@ -52,6 +53,7 @@ def check_winner(board: list) -> str:
 
 
 def best_move(board: list, player: str) -> int | str:
+    """Звернення до API для обрахування кращого ходу"""
 
     target_url = f"{BASE_API_URL}/move"
     headers = API_HEADERS
@@ -73,11 +75,15 @@ def best_move(board: list, player: str) -> int | str:
 
 
 def build_view(page: ft.Page) -> ft.View:
+    """Побудова головного екрану гри"""
 
     def _set_ai() -> str:
+        """Визначення символу, за який грає ШІ -- протилежний від людини"""
+
         return Symbol.O.value if player == Symbol.X.value else Symbol.X.value
 
     def _check_game_status() -> None:
+        """Перевірка чи є переможець на дошці"""
 
         nonlocal game_finished
 
@@ -97,6 +103,9 @@ def build_view(page: ft.Page) -> ft.View:
         message_block.update()
 
     def _ai_move(symbol) -> None:
+        """Хід з використанням розрахунку кращого ходу.
+        Використовується для ходу ШІ, або для людини (при
+        натисканні кнопки автоматичного ходу)"""
 
         nonlocal game_finished
 
@@ -116,6 +125,7 @@ def build_view(page: ft.Page) -> ft.View:
         _check_game_status()
 
     def _move_player(position: int, symbol: str) -> None:
+        """Хід гравця. Винесено в окрему функцію для кращої читабельності коду"""
 
         board[position] = symbol
         board_layout.controls = _render_board()
@@ -123,35 +133,40 @@ def build_view(page: ft.Page) -> ft.View:
         _check_game_status()
 
     def _click(event: ft.Event) -> None:
+        """Обробка кліку на дошці або кнопки автоматичного ходу"""
 
-        if game_finished:
+        if game_finished:  # Ігноруємо, якщо гра закінчилася
             return
 
-        if event.control.data == NUMBER_42:
+        if event.control.data == NUMBER_42:  # Якщо натиснули автоматичний хід
             _ai_move(player)
-        else:
+        else:  # Звичайний клік по дошці
+            # Якщо натиснули по заповненому полю дошки -- ігноруємо
             if board[event.control.data] != Symbol.EMPTY.value:
                 return
             _move_player(event.control.data, player)
 
-        if game_finished:
+        if game_finished:  # Ігноруємо код далі, якщо гра закінчилася
             return
 
-        _ai_move(ai)
+        _ai_move(ai)  # Хід ШІ
 
     def _switch(event: ft.Event) -> None:
+        """Перемикання за кого грати X-O із скиданням стану гри"""
 
         _init(event.control.selected[0])
         board_layout.controls = _render_board()
         event.page.update()
 
     def _rerun(event: ft.Event) -> None:
+        """Скидання стану гри, без перемикання за кого грати"""
 
         _init(player)
         board_layout.controls = _render_board()
         event.page.update()
 
     def _icon(icon: str) -> ft.Icon | None:
+        """Фабрика об'єктів іконок - залежно від використаного символу"""
 
         match icon:
             case Symbol.X.value:
@@ -162,7 +177,7 @@ def build_view(page: ft.Page) -> ft.View:
                 return None
 
     def _cell(content: ft.Icon, data: int) -> ft.Container:
-
+        """Фабрика комірок дошки, залежно від використаної іконки та позиції в списку"""
         return ft.Container(
             content=content,
             data=data,
@@ -176,6 +191,8 @@ def build_view(page: ft.Page) -> ft.View:
         )
 
     def _render_board() -> list:
+        """Рендерінг дошки"""
+
         return [
             ft.Row(
                 [_cell(_icon(board[i]), i) for i in range(start, start + 3)],
@@ -203,7 +220,7 @@ def build_view(page: ft.Page) -> ft.View:
     )
 
     def _init(player_symbol: str) -> None:
-
+        """Ініціалізація стану гри або його зміна при перемиканні"""
         nonlocal player, ai, board, game_finished
         board = EMPTY_BOARD.copy()
         player = player_symbol
@@ -211,24 +228,23 @@ def build_view(page: ft.Page) -> ft.View:
         game_finished = False
         message_block.value = ""
 
-        if player == Symbol.O.value:
+        if player == Symbol.O.value:  # Якщо ШІ грає за X -- одразу робимо хід
             _ai_move(ai)
 
     board = []
     player = ""
     ai = ""
     game_finished = False
-
     message_block = ft.Text(size=TEXT_SIZE)
 
     _init(Symbol.X.value)
-
-    page.title = TITLE
 
     board_layout = ft.Column(
         controls=_render_board(),
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
     )
+
+    page.title = TITLE
 
     return ft.View(
         route=ROUTE,
