@@ -18,6 +18,12 @@ def build_main_view(page: ft.Page) -> ft.View:
         controls=[
             elements.app_bar(root.TITLE),
             ft.Text(""),
+            ft.Image(
+                src="/icons/loading-animation.png",  # Посилання на картинку
+                width=200,
+                height=200,
+            ),
+            ft.Text(""),
             ft.Text("Обери гру, в яку хочеш зіграти:", size=TEXT_SIZE),
             ft.Text(""),
             ft.Button(
