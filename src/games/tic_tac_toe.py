@@ -87,6 +87,9 @@ def build_view(page: ft.Page) -> ft.View:
 
         nonlocal game_finished
 
+        if game_finished:  # Ігноруємо, якщо гра закінчилася
+            return
+
         winner = check_winner(board)
         match winner:
             case Symbol.X.value | Symbol.O.value:
