@@ -12,6 +12,7 @@ ROUTE = "/next-number"
 TITLE = "Вгадай наступне число"
 SUB_TITLE = "Визнач, що це за послідовність\nта яке число має бути наступним:"
 
+
 def get_sequence(length, difficulty):
 
     target_url = f"https://karatel.ua/api/next-number/get/{length}"

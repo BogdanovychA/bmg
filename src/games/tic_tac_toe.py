@@ -13,6 +13,7 @@ ROUTE = "/tic-tac-toe"
 TITLE = "Хрестики-нулики"
 SUB_TITLE = "Обери за кого грати"
 
+
 class Symbol(Enum):
     X = "X"
     O = "O"
@@ -31,6 +32,7 @@ EMPTY_BOARD = [Symbol.EMPTY.value] * 9
 BASE_API_URL = "https://karatel.ua/api/ttt"
 API_HEADERS = {'accept': 'application/json', 'Content-Type': 'application/json'}
 ERROR_TEXT = "Сталася помилка при запиті до API"
+
 
 def check_winner(board: list) -> str:
 
