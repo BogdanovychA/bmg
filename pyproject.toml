@@ -1,5 +1,5 @@
 [project]
-name = "BMG"
+name = "MiniGames"
 version = "0.0.1"
 description = "Bogdanovych's Mini Games"
 readme = "README.md"
@@ -8,12 +8,13 @@ authors = [
     { name = "Andrii Bogdanovych", email = "a@bogdanovych.org" }
 ]
 dependencies = [
-  "flet"
+  "flet",
+  "requests"
 ]
 
 [tool.flet]
 org = "org.bogdanovych"
-product = "BMG"
+product = "MiniGames"
 company = "Bogdanovych Corp."
 copyright = "Copyright (C) 2025 by Andrii Bogdanovych"
 
