@@ -138,6 +138,10 @@ def build_view(page: ft.Page) -> ft.View:
     def _click(event: ft.Event) -> None:
         """Обробка кліку на дошці або кнопки автоматичного ходу"""
 
+        async def __run_ai() -> None:
+            """Асинхронна обгортка для ходу ШІ"""
+            _ai_move(ai)
+
         if game_finished:  # Ігноруємо, якщо гра закінчилася
             return
 
@@ -152,7 +156,7 @@ def build_view(page: ft.Page) -> ft.View:
         if game_finished:  # Ігноруємо код далі, якщо гра закінчилася
             return
 
-        _ai_move(ai)  # Хід ШІ
+        page.run_task(__run_ai)
 
     def _switch(event: ft.Event) -> None:
         """Перемикання за кого грати X-O із скиданням стану гри"""
