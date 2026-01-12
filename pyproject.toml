@@ -1,6 +1,6 @@
 [project]
-name = "MiniGames"
-version = "0.0.1"
+name = "Mini Games"
+version = "1.0.0"
 description = "Bogdanovych's Mini Games"
 readme = "README.md"
 requires-python = ">=3.9"
