@@ -11,6 +11,7 @@ from utils.config import LINK_COLOR, TITLE_SIZE
 def back_button(page) -> ft.Button:
     return ft.Button(
         "Всі ігри",
+        icon=ft.Icons.ARROW_BACK,
         on_click=lambda: asyncio.create_task(page.push_route(root.ROUTE)),
     )
 
