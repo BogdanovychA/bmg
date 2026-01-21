@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
+import uuid
 
 import flet as ft
 
 from games import next_number, tic_tac_toe
 from routes import about, error404, root
 from utils import elements
-from utils.config import TEXT_SIZE
+from utils import measurement_api as ga
+from utils import storage
+from utils.config import APP_NAME, TEXT_SIZE
 
 
 def build_main_view(page: ft.Page) -> ft.View:
@@ -44,12 +47,21 @@ def build_main_view(page: ft.Page) -> ft.View:
     )
 
 
-def main(page: ft.Page):
+async def main(page: ft.Page):
     page.title = root.TITLE
     page.theme_mode = ft.ThemeMode.DARK
     page.route = root.ROUTE
 
-    def route_change():
+    async def route_change():
+
+        page.run_task(
+            ga.log_event,
+            page.session.store.get("client_id"),
+            str(page.platform.value),
+            "route_change",
+            page.route,
+        )
+
         page.views.clear()
         page.views.append(build_main_view(page))
         match page.route:
@@ -71,10 +83,32 @@ def main(page: ft.Page):
             top_view = page.views[-1]
             await page.push_route(top_view.route)
 
+    async def _init() -> None:
+        """Стартова ініціалізація змінних"""
+
+        async def __init_obj(name: str, default_value: object):
+            """Допоміжна функція ініціалізації об'єктів,
+            зчитування налаштувань з кешу"""
+
+            is_contains = await ft.SharedPreferences().contains_key(
+                f"{APP_NAME}.{name}"
+            )
+            if is_contains:
+                value = await storage.load(name)
+            else:
+                value = default_value
+                await storage.save(name, value)
+
+            page.session.store.set(name, value)
+
+        await __init_obj("client_id", str(uuid.uuid4()))
+
     page.on_route_change = route_change
     page.on_view_pop = view_pop
 
-    route_change()
+    await _init()
+
+    await route_change()
 
 
 if __name__ == "__main__":
