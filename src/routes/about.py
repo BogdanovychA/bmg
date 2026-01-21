@@ -41,7 +41,12 @@ def build_view(page: ft.Page) -> ft.View:
                     elements.link("GitHub", "https://github.com/BogdanovychA/bmg"),
                 ],
             ),
-            ft.Text(""),
+            ft.Text(
+                size=TEXT_SIZE,
+                spans=[
+                    elements.link("Інші застосунки", "https://apps.bogdanovych.org"),
+                ],
+            ),
             ft.Text(
                 "Створено за підтримки\nГО «Фундація.101»",
                 size=TEXT_SIZE,
