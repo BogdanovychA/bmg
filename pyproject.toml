@@ -14,9 +14,9 @@ dependencies = [
 
 [tool.flet]
 org = "org.bogdanovych"
-product = "MiniGames"
+product = "Міні ігри"
 company = "Bogdanovych Corp."
-copyright = "Copyright (C) 2025 by Andrii Bogdanovych"
+copyright = "Copyright (C) 2026 by Andrii Bogdanovych"
 
 [tool.flet.app]
 path = "src"
