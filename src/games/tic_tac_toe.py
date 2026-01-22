@@ -3,7 +3,7 @@
 from enum import Enum
 
 import flet as ft
-import requests
+import httpx
 
 from routes import about
 from utils import elements
@@ -42,12 +42,17 @@ def check_winner(board: list) -> str:
     payload = board
 
     try:
-        response = requests.post(target_url, headers=headers, json=payload)
+        response = httpx.post(target_url, headers=headers, json=payload, timeout=10.0)
+
         response.raise_for_status()
         return response.json()["result"]
 
-    except (requests.exceptions.RequestException, Exception) as e:
+    except (httpx.RequestError, httpx.HTTPStatusError) as e:
         text = f"{ERROR_TEXT}: {e}"
+        print(text)
+        return text
+    except Exception as e:
+        text = f"Непередбачувана помилка: {e}"
         print(text)
         return text
 
@@ -60,16 +65,18 @@ def best_move(board: list, player: str) -> int | str:
     payload = {"board": board, "max_player_symbol": player}
 
     try:
-        response = requests.post(
-            target_url,
-            headers=headers,
-            json=payload,
-        )
+        response = httpx.post(target_url, headers=headers, json=payload, timeout=15.0)
+        # response = requests.post(target_url, headers=headers, json=payload,)
+
         response.raise_for_status()
         return response.json()
 
-    except (requests.exceptions.RequestException, Exception) as e:
+    except (httpx.RequestError, httpx.HTTPStatusError) as e:
         text = f"{ERROR_TEXT}: {e}"
+        print(text)
+        return text
+    except Exception as e:
+        text = f"Непередбачувана помилка: {e}"
         print(text)
         return text
 
@@ -159,7 +166,7 @@ def build_view(page: ft.Page) -> ft.View:
         page.run_task(__run_ai)
 
     def _switch(event: ft.Event) -> None:
-        """Перемикання за кого грати X-O із скиданням стану гри"""
+        """Перемикання за кого грати X-O зі скиданням стану гри"""
 
         _init(event.control.selected[0])
         board_layout.controls = _render_board()

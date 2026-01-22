@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import flet as ft
-import requests
+import httpx
 
 from routes import about
 from utils import elements
@@ -29,12 +29,17 @@ def get_sequence(length, difficulty):
     }
 
     try:
-        response = requests.get(target_url, params=query_params, timeout=5)
+        response = httpx.get(target_url, params=query_params, timeout=5.0)
+
         response.raise_for_status()
         return response.json()
 
-    except (requests.exceptions.RequestException, Exception) as e:
+    except (httpx.RequestError, httpx.HTTPStatusError) as e:
         text = f"Сталася помилка при запиті до API: {e}"
+        print(text)
+        return (TEXT_42, NUMBER_42), text
+    except Exception as e:
+        text = f"Інша помилка: {e}"
         print(text)
         return (TEXT_42, NUMBER_42), text
 
