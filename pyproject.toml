@@ -10,6 +10,7 @@ authors = [
 dependencies = [
   "flet",
   "httpx",
+  "flet-storage==0.1.2",
 ]
 
 [tool.flet]

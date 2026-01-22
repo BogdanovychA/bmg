@@ -4,12 +4,12 @@ import asyncio
 import uuid
 
 import flet as ft
+import flet_storage as fts
 
 from games import next_number, tic_tac_toe
 from routes import about, error404, root
 from utils import elements
 from utils import measurement_api as ga
-from utils import storage
 from utils.config import APP_NAME, TEXT_SIZE
 
 
@@ -94,10 +94,10 @@ async def main(page: ft.Page):
                 f"{APP_NAME}.{name}"
             )
             if is_contains:
-                value = await storage.load(name)
+                value = await fts.load(name, APP_NAME)
             else:
                 value = default_value
-                await storage.save(name, value)
+                await fts.save(name, APP_NAME, value)
 
             page.session.store.set(name, value)
 
