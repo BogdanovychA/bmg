@@ -20,7 +20,7 @@ TITLE = "Вгадай наступне число"
 SUB_TITLE = "Визнач, що це за послідовність\nта яке число має бути наступним:"
 
 
-def get_sequence(length, difficulty):
+async def get_sequence(length, difficulty):
 
     target_url = f"{API_URL}/next-number/get/{length}"
     query_params = {
@@ -29,10 +29,10 @@ def get_sequence(length, difficulty):
     }
 
     try:
-        response = httpx.get(target_url, params=query_params, timeout=5.0)
-
-        response.raise_for_status()
-        return response.json()
+        async with httpx.AsyncClient() as client:
+            response = await client.get(target_url, params=query_params, timeout=5.0)
+            response.raise_for_status()
+            return response.json()
 
     except (httpx.RequestError, httpx.HTTPStatusError) as e:
         text = f"Сталася помилка при запиті до API: {e}"
@@ -44,7 +44,7 @@ def get_sequence(length, difficulty):
         return (TEXT_42, NUMBER_42), text
 
 
-def build_view(page: ft.Page) -> ft.View:
+async def build_view(page: ft.Page) -> ft.View:
 
     def _ok(event: ft.Event) -> None:
         if is_int(answer_block.value) and int(answer_block.value) == target_value:
@@ -61,15 +61,15 @@ def build_view(page: ft.Page) -> ft.View:
         answer_block.value = str(target_value)
         event.page.update()
 
-    def _rerun(event: ft.Event) -> None:
-        _init()
+    async def _rerun(event: ft.Event) -> None:
+        await _init()
         answer_block.value = ""
         message_block.value = ""
         event.page.update()
 
-    def _init():
+    async def _init():
         nonlocal target_value, hint
-        sequence, hint = get_sequence(6, difficulty_block.value)
+        sequence, hint = await get_sequence(6, difficulty_block.value)
         *quest_numbers, target_value = sequence
         quest_block.value = ",   ".join(map(str, quest_numbers))
 
@@ -97,7 +97,7 @@ def build_view(page: ft.Page) -> ft.View:
     )
     message_block = ft.Text("", size=TEXT_SIZE)
 
-    _init()
+    await _init()
 
     return ft.View(
         route=ROUTE,

@@ -66,7 +66,7 @@ async def main(page: ft.Page):
         page.views.append(build_main_view(page))
         match page.route:
             case next_number.ROUTE:
-                page.views.append(next_number.build_view(page))
+                page.views.append(await next_number.build_view(page))
             case tic_tac_toe.ROUTE:
                 page.views.append(tic_tac_toe.build_view(page))
             case about.ROUTE:
