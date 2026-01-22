@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from enum import Enum
+from gc import disable
 
 import flet as ft
 import httpx
@@ -150,26 +151,28 @@ async def build_view(page: ft.Page) -> ft.View:
     async def _click(event: ft.Event) -> None:
         """Обробка кліку на дошці або кнопки автоматичного ходу"""
 
-        # async def __run_ai() -> None:
-        #     """Асинхронна обгортка для ходу ШІ"""
-        #     _ai_move(ai)
-
         if game_finished:  # Ігноруємо, якщо гра закінчилася
             return
 
-        if event.control.data == NUMBER_42:  # Якщо натиснули автоматичний хід
-            await _ai_move(player)
-        else:  # Звичайний клік по дошці
-            # Якщо натиснули по заповненому полю дошки -- ігноруємо
-            if board[event.control.data] != Symbol.EMPTY.value:
+        board_layout.disabled = True  # Блокуємо дошку на час ходу ШІ
+        board_layout.update()
+
+        try:
+            if event.control.data == NUMBER_42:  # Якщо натиснули автоматичний хід
+                await _ai_move(player)
+            else:  # Звичайний клік по дошці
+                # Якщо натиснули по заповненому полю дошки -- ігноруємо
+                if board[event.control.data] != Symbol.EMPTY.value:
+                    return
+                await _move_player(event.control.data, player)
+
+            if game_finished:  # Ігноруємо код далі, якщо гра закінчилася
                 return
-            await _move_player(event.control.data, player)
 
-        if game_finished:  # Ігноруємо код далі, якщо гра закінчилася
-            return
-
-        await _ai_move(ai)
-        # page.run_task(__run_ai)
+            await _ai_move(ai)
+        finally:
+            board_layout.disabled = False  # Розблоковуємо дошку
+            board_layout.update()
 
     async def _switch(event: ft.Event) -> None:
         """Перемикання за кого грати X-O зі скиданням стану гри"""
