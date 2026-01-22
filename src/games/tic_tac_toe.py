@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from enum import Enum
-from gc import disable
 
 import flet as ft
 import httpx
