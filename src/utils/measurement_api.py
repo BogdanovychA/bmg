@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import httpx
 import logging
+
+import httpx
+
 from utils.secret import GA_SECRET_KEY
 
 GA_ID = "G-GHW1HZTWBV"
@@ -23,11 +25,16 @@ else:
     logger.setLevel(logging.INFO)
 
 
-async def log_event(client_id: str, platform: str, event_name: str, page_path: str) -> bool:
+async def log_event(
+    client_id: str, platform: str, event_name: str, page_path: str
+) -> bool:
     """Логує подію"""
 
     suffix = "debug/" if DEBUG else ""
-    url = f"https://www.google-analytics.com/{suffix}mp/collect?measurement_id={GA_ID}&api_secret={GA_SECRET_KEY}"
+    url = (
+        f"https://www.google-analytics.com/{suffix}mp/collect?"
+        f"measurement_id={GA_ID}&api_secret={GA_SECRET_KEY}"
+    )
 
     payload = {
         "client_id": client_id,
@@ -48,7 +55,9 @@ async def log_event(client_id: str, platform: str, event_name: str, page_path: s
 
             if DEBUG:
                 if response.status_code != 200:
-                    logger.warning(f"GA debug unexpected status: {response.status_code}")
+                    logger.warning(
+                        f"GA debug unexpected status: {response.status_code}"
+                    )
                     return False
 
                 debug_result = response.json()
