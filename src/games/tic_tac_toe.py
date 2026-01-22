@@ -34,7 +34,7 @@ API_HEADERS = {'accept': 'application/json', 'Content-Type': 'application/json'}
 ERROR_TEXT = "Сталася помилка при запиті до API"
 
 
-def check_winner(board: list) -> str:
+async def check_winner(board: list) -> str:
     """Звернення до API для перевірки чи є переможець на дошці"""
 
     target_url = f"{BASE_API_URL}/check"
@@ -42,10 +42,13 @@ def check_winner(board: list) -> str:
     payload = board
 
     try:
-        response = httpx.post(target_url, headers=headers, json=payload, timeout=10.0)
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                target_url, headers=headers, json=payload, timeout=10.0
+            )
 
-        response.raise_for_status()
-        return response.json()["result"]
+            response.raise_for_status()
+            return response.json()["result"]
 
     except (httpx.RequestError, httpx.HTTPStatusError) as e:
         text = f"{ERROR_TEXT}: {e}"
@@ -57,7 +60,7 @@ def check_winner(board: list) -> str:
         return text
 
 
-def best_move(board: list, player: str) -> int | str:
+async def best_move(board: list, player: str) -> int | str:
     """Звернення до API для обрахування кращого ходу"""
 
     target_url = f"{BASE_API_URL}/move"
@@ -65,11 +68,13 @@ def best_move(board: list, player: str) -> int | str:
     payload = {"board": board, "max_player_symbol": player}
 
     try:
-        response = httpx.post(target_url, headers=headers, json=payload, timeout=15.0)
-        # response = requests.post(target_url, headers=headers, json=payload,)
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                target_url, headers=headers, json=payload, timeout=15.0
+            )
 
-        response.raise_for_status()
-        return response.json()
+            response.raise_for_status()
+            return response.json()
 
     except (httpx.RequestError, httpx.HTTPStatusError) as e:
         text = f"{ERROR_TEXT}: {e}"
@@ -81,7 +86,7 @@ def best_move(board: list, player: str) -> int | str:
         return text
 
 
-def build_view(page: ft.Page) -> ft.View:
+async def build_view(page: ft.Page) -> ft.View:
     """Побудова головного екрану гри"""
 
     def _set_ai() -> str:
@@ -89,7 +94,7 @@ def build_view(page: ft.Page) -> ft.View:
 
         return Symbol.O.value if player == Symbol.X.value else Symbol.X.value
 
-    def _check_game_status() -> None:
+    async def _check_game_status() -> None:
         """Перевірка чи є переможець на дошці"""
 
         nonlocal game_finished
@@ -97,7 +102,7 @@ def build_view(page: ft.Page) -> ft.View:
         if game_finished:  # Ігноруємо, якщо гра закінчилася
             return
 
-        winner = check_winner(board)
+        winner = await check_winner(board)
         match winner:
             case Symbol.X.value | Symbol.O.value:
                 message_block.value = f"Перемога {winner}"
@@ -112,14 +117,14 @@ def build_view(page: ft.Page) -> ft.View:
 
         message_block.update()
 
-    def _ai_move(symbol) -> None:
+    async def _ai_move(symbol) -> None:
         """Хід з використанням розрахунку кращого ходу.
         Використовується для ходу ШІ, або для людини (при
         натисканні кнопки автоматичного ходу)"""
 
         nonlocal game_finished
 
-        ai_move = best_move(board, symbol)
+        ai_move = await best_move(board, symbol)
 
         if isinstance(ai_move, str):  # Якщо помилка API
             message_block.value = ai_move
@@ -132,50 +137,51 @@ def build_view(page: ft.Page) -> ft.View:
         else:  # Інша непередбачувана помилка (вірогідність дуже низька)
             print("Непередбачуваний тип")
 
-        _check_game_status()
+        await _check_game_status()
 
-    def _move_player(position: int, symbol: str) -> None:
+    async def _move_player(position: int, symbol: str) -> None:
         """Хід гравця. Винесено в окрему функцію для кращої читабельності коду"""
 
         board[position] = symbol
         board_layout.controls = _render_board()
         board_layout.update()
-        _check_game_status()
+        await _check_game_status()
 
-    def _click(event: ft.Event) -> None:
+    async def _click(event: ft.Event) -> None:
         """Обробка кліку на дошці або кнопки автоматичного ходу"""
 
-        async def __run_ai() -> None:
-            """Асинхронна обгортка для ходу ШІ"""
-            _ai_move(ai)
+        # async def __run_ai() -> None:
+        #     """Асинхронна обгортка для ходу ШІ"""
+        #     _ai_move(ai)
 
         if game_finished:  # Ігноруємо, якщо гра закінчилася
             return
 
         if event.control.data == NUMBER_42:  # Якщо натиснули автоматичний хід
-            _ai_move(player)
+            await _ai_move(player)
         else:  # Звичайний клік по дошці
             # Якщо натиснули по заповненому полю дошки -- ігноруємо
             if board[event.control.data] != Symbol.EMPTY.value:
                 return
-            _move_player(event.control.data, player)
+            await _move_player(event.control.data, player)
 
         if game_finished:  # Ігноруємо код далі, якщо гра закінчилася
             return
 
-        page.run_task(__run_ai)
+        await _ai_move(ai)
+        # page.run_task(__run_ai)
 
-    def _switch(event: ft.Event) -> None:
+    async def _switch(event: ft.Event) -> None:
         """Перемикання за кого грати X-O зі скиданням стану гри"""
 
-        _init(event.control.selected[0])
+        await _init(event.control.selected[0])
         board_layout.controls = _render_board()
         event.page.update()
 
-    def _rerun(event: ft.Event) -> None:
+    async def _rerun(event: ft.Event) -> None:
         """Скидання стану гри, без перемикання за кого грати"""
 
-        _init(player)
+        await _init(player)
         board_layout.controls = _render_board()
         event.page.update()
 
@@ -233,7 +239,7 @@ def build_view(page: ft.Page) -> ft.View:
         on_change=_switch,
     )
 
-    def _init(player_symbol: str) -> None:
+    async def _init(player_symbol: str) -> None:
         """Ініціалізація стану гри або його зміна при перемиканні"""
         nonlocal player, ai, board, game_finished
         board = EMPTY_BOARD.copy()
@@ -243,7 +249,7 @@ def build_view(page: ft.Page) -> ft.View:
         message_block.value = "Зроби свій хід:"
 
         if player == Symbol.O.value:  # Якщо ШІ грає за X -- одразу робимо хід
-            _ai_move(ai)
+            await _ai_move(ai)
 
     board = []
     player = ""
@@ -251,7 +257,7 @@ def build_view(page: ft.Page) -> ft.View:
     game_finished = False
     message_block = ft.Text(size=TEXT_SIZE)
 
-    _init(Symbol.X.value)
+    await _init(Symbol.X.value)
 
     board_layout = ft.Column(
         controls=_render_board(),
