@@ -4,7 +4,7 @@ import asyncio
 import uuid
 
 import flet as ft
-import flet_storage as fts
+from flet_storage import FletStorage
 
 from games import next_number, tic_tac_toe
 from routes import about, error404, root
@@ -90,21 +90,15 @@ async def main(page: ft.Page):
             """Допоміжна функція ініціалізації об'єктів,
             зчитування налаштувань з кешу"""
 
-            is_contains = await ft.SharedPreferences().contains_key(
-                f"{APP_NAME}.{name}"
-            )
-            if is_contains:
-                value = await fts.load(name, APP_NAME)
-            else:
-                value = default_value
-                await fts.save(name, APP_NAME, value)
-
+            value = await storage.get_or_default(name, default_value)
             page.session.store.set(name, value)
 
         await __init_obj("client_id", str(uuid.uuid4()))
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
+
+    storage = FletStorage(APP_NAME)
 
     await _init()
 

@@ -1,6 +1,6 @@
 [project]
 name = "Mini Games"
-version = "1.0.4"
+version = "1.0.5"
 description = "Bogdanovych's Mini Games"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -10,7 +10,7 @@ authors = [
 dependencies = [
   "flet",
   "httpx",
-  "flet-storage==0.1.2",
+  "flet-storage",
 ]
 
 [tool.flet]
