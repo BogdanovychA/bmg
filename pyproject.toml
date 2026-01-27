@@ -5,19 +5,19 @@ description = "Bogdanovych's Mini Games"
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
-    { name = "Andrii Bogdanovych", email = "a@bogdanovych.org" }
+    { name = "Andrii Bogdanovych", email = "ab@foundation101.org" }
 ]
 dependencies = [
-  "flet",
-  "httpx",
-  "flet-storage",
+  "flet>=0.80.2",
+  "flet-storage>=1.0.0",
+  "httpx>=0.28.1",
 ]
 
 [tool.flet]
-org = "org.bogdanovych"
+org = "org.foundation101"
 product = "Міні ігри"
-company = "Bogdanovych Corp."
-copyright = "Copyright (C) 2026 by Andrii Bogdanovych"
+company = "NGO Foundation.101"
+copyright = "Copyright (C) 2026 by NGO Foundation.101"
 
 [tool.flet.app]
 path = "src"
