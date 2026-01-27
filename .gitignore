@@ -4,9 +4,10 @@
 venv*/
 **/__pycache__/
 **/*.pyc
-build/
+build*/
 src/utils/secret.py
 android/
+linux/
 src/temp/
 htmlcov/
 .pytest_cache/
