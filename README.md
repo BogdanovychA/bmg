@@ -1,10 +1,17 @@
-# Bogdanovych's Mini Games
+# Міні ігри (Bogdanovych's Mini Games)
 
 ⚠️ **Увага:** Застосунок знаходиться **в розробці**. У вільний час я вивчаю Python і розважаюся із написанням коду. 😎
 
-## 📖 Опис
+## Корисні посилання
 
-Грати: https://mini-games.bogdanovych.org/
+## Грати
+
+* [Веб-версія](https://mini-games.bogdanovych.org/)
+* [Android (Google Play)](https://play.google.com/store/apps/details?id=org.foundation101.minigames)
+
+## Інше
+
+* [Підтримати проєкт](https://send.monobank.ua/jar/8Qn1woNnC7)
 
 ## 🚀 Встановлення
 
