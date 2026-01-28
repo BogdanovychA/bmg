@@ -2,5 +2,5 @@
 
 from utils.config import BASE_URL
 
-TITLE = "Bogdanovych's Mini Games"
+TITLE = "Міні ігри"
 ROUTE = BASE_URL + "/"
