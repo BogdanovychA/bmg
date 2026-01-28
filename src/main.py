@@ -22,7 +22,7 @@ def build_main_view(page: ft.Page) -> ft.View:
             elements.app_bar(root.TITLE),
             ft.Text(""),
             ft.Image(
-                src="/icons/loading-animation.png",  # Посилання на картинку
+                src="/images/logo_alpha.png",  # Посилання на картинку
                 width=200,
                 height=200,
             ),
