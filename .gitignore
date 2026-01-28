@@ -6,8 +6,7 @@ venv*/
 **/*.pyc
 build*/
 src/utils/secret.py
-android/
-linux/
+bin/
 src/temp/
 htmlcov/
 .pytest_cache/
