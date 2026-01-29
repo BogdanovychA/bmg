@@ -1,4 +1,4 @@
-# Міні ігри (Bogdanovych's Mini Games)
+# Мініігри (Bogdanovych's MiniGames)
 
 ⚠️ **Увага:** Застосунок знаходиться **в розробці**. У вільний час я вивчаю Python і розважаюся із написанням коду. 😎
 
@@ -6,7 +6,7 @@
 
 ## Грати
 
-* [Веб-версія](https://mini-games.bogdanovych.org/)
+* [Веб-версія](https://minigames.bogdanovych.org/)
 * [Android (Google Play)](https://play.google.com/store/apps/details?id=org.foundation101.minigames)
 
 ## Інше

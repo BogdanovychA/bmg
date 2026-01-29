@@ -1,7 +1,7 @@
 [project]
-name = "mini-games"
-version = "1.0.7"
-description = "Bogdanovych's Mini Games"
+name = "minigames"
+version = "1.0.8"
+description = "Bogdanovych's MiniGames"
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [
@@ -15,7 +15,7 @@ dependencies = [
 
 [tool.flet]
 org = "org.foundation101"
-product = "Міні ігри"
+product = "Мініігри"
 company = "NGO Foundation.101"
 copyright = "Copyright (C) 2026 by NGO Foundation.101"
 
