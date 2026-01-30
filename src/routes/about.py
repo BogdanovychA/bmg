@@ -28,7 +28,7 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text("Андрій БОГДАНОВИЧ", size=TEXT_SIZE),
             ft.Text(""),
             ft.Image(
-                src="/images/bogdanovych-900x900.png",  # Посилання на картинку
+                src="/images/bogdanovych-900x900.jpg",  # Посилання на картинку
                 width=200,
                 height=200,
             ),
