@@ -141,7 +141,7 @@ def build_view(page: ft.Page) -> ft.View:
         board_layout.update()
         _check_game_status()
 
-    def _click(event: ft.Event) -> None:
+    async def _click(event: ft.Event) -> None:
         """Обробка кліку на дошці або кнопки автоматичного ходу"""
 
         async def __run_ai() -> None:
@@ -162,7 +162,7 @@ def build_view(page: ft.Page) -> ft.View:
         if game_finished:  # Ігноруємо код далі, якщо гра закінчилася
             return
 
-        page.run_task(__run_ai)
+        await __run_ai()
 
     def _switch(event: ft.Event) -> None:
         """Перемикання за кого грати X-O зі скиданням стану гри"""
