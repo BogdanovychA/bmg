@@ -3,7 +3,7 @@ name = "minigames"
 version = "1.0.8"
 description = "Bogdanovych's MiniGames"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.14"
 authors = [
     { name = "Andrii Bogdanovych", email = "ab@foundation101.org" }
 ]
