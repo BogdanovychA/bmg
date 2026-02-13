@@ -12,6 +12,7 @@ from routes import about, error404, root
 from utils import elements
 from utils import measurement_api as ga
 from utils.config import APP_NAME, TEXT_SIZE
+from utils.constants import GameMode
 
 
 def build_main_view(page: ft.Page) -> ft.View:
@@ -95,6 +96,8 @@ async def main(page: ft.Page):
             page.session.store.set(name, value)
 
         await __init_obj("client_id", str(uuid.uuid4()))
+
+        page.session.store.set("game_mode", GameMode.OFFLINE.value)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop

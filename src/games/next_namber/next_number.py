@@ -5,7 +5,7 @@ import flet as ft
 from routes import about
 from utils import elements
 from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
-from utils.constants import Difficulty
+from utils.constants import Difficulty, GameMode
 from utils.utils import is_int
 
 from . import abstract
@@ -16,6 +16,19 @@ SUB_TITLE = "Визнач, що це за послідовність\nта як�
 
 
 def build_view(page: ft.Page) -> ft.View:
+
+    def _create_client() -> abstract.GameData:
+        """
+        Фабрика класів
+        Створює клієнт залежно від режиму гри online/offline
+        """
+
+        game_mode = page.session.store.get("game_mode")
+
+        if game_mode == GameMode.OFFLINE.value:
+            return abstract.SelfData()
+
+        return abstract.APIData()
 
     def _ok(event: ft.Event) -> None:
         if is_int(answer_block.value) and int(answer_block.value) == target_value:
@@ -68,8 +81,7 @@ def build_view(page: ft.Page) -> ft.View:
     )
     message_block = ft.Text("", size=TEXT_SIZE)
 
-    # client = abstract.APIData()
-    client = abstract.SelfData()
+    client = _create_client()
 
     _init()
 

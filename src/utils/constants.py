@@ -9,3 +9,8 @@ class Difficulty(Enum):
     HARD = "hard"
     EXPERT = "expert"
     RANDOM = "random"
+
+
+class GameMode(Enum):
+    ONLINE = "online"
+    OFFLINE = "offline"
