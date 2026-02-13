@@ -6,7 +6,8 @@ import uuid
 import flet as ft
 from flet_storage import FletStorage
 
-from games import next_number, tic_tac_toe
+from games.next_namber import next_number
+from games.tic_tac_toe import tic_tac_toe
 from routes import about, error404, root
 from utils import elements
 from utils import measurement_api as ga
