@@ -1,47 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import flet as ft
-import httpx
 
 from routes import about
 from utils import elements
-from utils.config import (
-    API_URL,
-    FORM_BG_COLOR,
-    FORM_BORDER_COLOR,
-    NUMBER_42,
-    TEXT_42,
-    TEXT_SIZE,
-)
+from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
 from utils.utils import is_int
+
+from . import abstract
 
 ROUTE = "/next-number"
 TITLE = "Вгадай наступне число"
 SUB_TITLE = "Визнач, що це за послідовність\nта яке число має бути наступним:"
-
-
-def get_sequence(length, difficulty):
-
-    target_url = f"{API_URL}/next-number/get/{length}"
-    query_params = {
-        "difficulty": difficulty,
-        # "random": "true"
-    }
-
-    try:
-        response = httpx.get(target_url, params=query_params, timeout=5.0)
-
-        response.raise_for_status()
-        return response.json()
-
-    except (httpx.RequestError, httpx.HTTPStatusError) as e:
-        text = f"Сталася помилка при запиті до API: {e}"
-        print(text)
-        return (TEXT_42, NUMBER_42), text
-    except Exception as e:
-        text = f"Інша помилка: {e}"
-        print(text)
-        return (TEXT_42, NUMBER_42), text
 
 
 def build_view(page: ft.Page) -> ft.View:
@@ -69,7 +39,7 @@ def build_view(page: ft.Page) -> ft.View:
 
     def _init():
         nonlocal target_value, hint
-        sequence, hint = get_sequence(6, difficulty_block.value)
+        sequence, hint = client.get_sequence(6, difficulty_block.value)
         *quest_numbers, target_value = sequence
         quest_block.value = ",   ".join(map(str, quest_numbers))
 
@@ -96,6 +66,8 @@ def build_view(page: ft.Page) -> ft.View:
         value="", width=100, bgcolor=FORM_BG_COLOR, border_color=FORM_BORDER_COLOR
     )
     message_block = ft.Text("", size=TEXT_SIZE)
+
+    client = abstract.SelfData()
 
     _init()
 
