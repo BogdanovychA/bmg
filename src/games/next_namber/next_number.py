@@ -19,7 +19,7 @@ def build_view(page: ft.Page) -> ft.View:
 
     def _create_client() -> abstract.GameData:
         """
-        Фабрика класів
+        Фабрика об'єктів.
         Створює клієнт залежно від режиму гри online/offline
         """
 
