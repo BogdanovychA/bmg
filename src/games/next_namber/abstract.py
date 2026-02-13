@@ -4,7 +4,9 @@ from abc import ABC, abstractmethod
 
 import httpx
 
-from utils.config import API_URL, NUMBER_42, TEXT_42
+from utils.config import NUMBER_42, TEXT_42
+
+API_URL = "https://karatel.ua/api"
 
 
 class GameData(ABC):
