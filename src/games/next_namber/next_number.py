@@ -67,7 +67,8 @@ def build_view(page: ft.Page) -> ft.View:
     )
     message_block = ft.Text("", size=TEXT_SIZE)
 
-    client = abstract.APIData()
+    # client = abstract.APIData()
+    client = abstract.SelfData()
 
     _init()
 

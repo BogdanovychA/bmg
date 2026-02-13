@@ -4,9 +4,9 @@ from abc import ABC, abstractmethod
 
 import httpx
 
-from utils.config import NUMBER_42, TEXT_42
+from utils.config import API_URL, NUMBER_42, TEXT_42
 
-API_URL = "https://karatel.ua/api"
+from . import logic
 
 
 class GameData(ABC):
@@ -45,4 +45,4 @@ class APIData(GameData):
 class SelfData(GameData):
 
     def get_sequence(self, length, difficulty):
-        return (1, 2, 3, 4, 5, 6), "Тестова послідовність"
+        return logic.get_sequence(length, difficulty)
