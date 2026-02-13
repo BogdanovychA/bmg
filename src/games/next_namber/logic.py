@@ -110,6 +110,7 @@ PRIMES = (
 
 def arithmetic_sequence(start: int, step: int, length: int) -> tuple[int, ...]:
     """Арифметична послідовність"""
+
     if length <= 0:
         raise ValueError("length має бути > 0")
     if step == 0:
@@ -119,6 +120,7 @@ def arithmetic_sequence(start: int, step: int, length: int) -> tuple[int, ...]:
 
 def geometric_sequence(start: int, ratio: int, length: int) -> tuple[int, ...]:
     """Геометрична послідовність"""
+
     if length <= 0:
         raise ValueError("length має бути > 0")
     if ratio in (0, 1, -1):
@@ -132,6 +134,7 @@ def arithmetic_plus_sequence(
     start: int, step: int, multiplier: int, length: int
 ) -> tuple[int, ...]:
     """Арифметична послідовність зі збільшенням кроку"""
+
     if length <= 0:
         raise ValueError("length має бути > 0")
     sequence = [start]
@@ -144,6 +147,7 @@ def arithmetic_plus_sequence(
 
 def power_sequence(base: int, power: int, length: int) -> tuple[int, ...]:
     """Послідовність степенів числа"""
+
     if length <= 0:
         raise ValueError("length має бути > 0")
     if base <= 1:
@@ -155,27 +159,11 @@ def power_sequence(base: int, power: int, length: int) -> tuple[int, ...]:
 
 def primes_sequence(start_index: int, length: int) -> tuple[int, ...]:
     """Послідовність простих чисел"""
+
     length_tuple = len(PRIMES)
     if start_index + length > length_tuple:
         raise ValueError(f"start_index + length не може бути > {length_tuple}")
     return PRIMES[start_index : start_index + length]
-
-
-# def fibonacci_sequence(start_index: int, length: int) -> tuple[int, ...]:
-#     """Послідовність Фібоначчі. Використання формули Бінета"""
-#     if start_index < 0:
-#         raise ValueError("start_index має бути більше чи дорівнювати 0")
-#
-#     if length <= 0:
-#         raise ValueError("length має бути > 0")
-#
-#     _GOLDEN_RATIO = (1 + 5 ** 0.5) / 2
-#     _CONJUGATE_RATIO = (1 - 5 ** 0.5) / 2
-#
-#     def _fibonacci_number(n: int) -> int:
-#         return int(round((_GOLDEN_RATIO ** n - _CONJUGATE_RATIO ** n) / (5 ** 0.5)))
-#
-#     return tuple(_fibonacci_number(n) for n in range(start_index, start_index + length))
 
 
 def fibonacci_sequence(start_index: int, length: int) -> tuple[int, ...]:
@@ -199,18 +187,14 @@ def fibonacci_sequence(start_index: int, length: int) -> tuple[int, ...]:
     return tuple(sequence)
 
 
-def get_game(
-    length: int,
-    difficulty: Difficulty = Difficulty.RANDOM,
-    random_game: bool = True,
-) -> tuple | tuple[tuple, ...]:
-    """Фабрика функцій.
+def get_game(length: int, difficulty: Difficulty = Difficulty.RANDOM) -> tuple:
+    """
+    Фабрика функцій.
     Створює кортеж для виклику гри (враховуючи рівень складності):
     функція, яка створює послідовність,
     аргументи для цієї функції,
     крок для зрізу (прямий (1) чи зворотній (-1))
     опис послідовності.
-    Якщо random_game = False, створює кортеж кортежів.
     """
 
     easy: tuple = (
@@ -351,27 +335,19 @@ def get_game(
         case Difficulty.RANDOM | _:
             the_tuple = random.choice((easy, medium, hard, expert))
 
-    if random_game:
-        return random.choice(the_tuple)
-    else:
-        return the_tuple
+    return random.choice(the_tuple)
 
 
 def get_sequence(
-    length: int, difficulty: Difficulty = Difficulty.RANDOM, random_game: bool = True
-) -> tuple[tuple[int, ...], str] | tuple[tuple[tuple[int, ...], str], ...]:
-    """Використовує фабрику функцій, створює послідовність та повертає
-    кортеж з неї та опису.
-    Якщо random_game = False, повертає кортеж кортежів"""
+    length: int, difficulty: Difficulty = Difficulty.RANDOM
+) -> tuple[tuple[int, ...], str]:
+    """
+    Використовує фабрику функцій, створює послідовність та повертає
+    кортеж з неї та опис.
+    """
 
-    game_config = get_game(length, difficulty, random_game)
+    game_config = get_game(length, difficulty)
 
-    if random_game:
-        func, args, step, text = game_config
-        sequence = func(*args)[::step]
-        return sequence, text
-    else:
-        list_sequence = [
-            (func(*args)[::step], text) for func, args, step, text in game_config
-        ]
-        return tuple(list_sequence)
+    func, args, step, text = game_config
+    sequence = func(*args)[::step]
+    return sequence, text

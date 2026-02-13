@@ -10,20 +10,21 @@ from . import logic
 
 
 class GameData(ABC):
+    """Абстрактний метод для роботи з даними гри"""
 
     @abstractmethod
     def get_sequence(self, length, difficulty) -> tuple[tuple[int, ...], str]:
+        """Функція отримання послідовності та її опису"""
         pass
 
 
 class APIData(GameData):
+    """Робота по API"""
 
     def get_sequence(self, length, difficulty):
-
         target_url = f"{API_URL}/next-number/get/{length}"
         query_params = {
             "difficulty": difficulty,
-            # "random": "true"
         }
 
         try:
@@ -43,6 +44,7 @@ class APIData(GameData):
 
 
 class SelfData(GameData):
+    """Робота локально"""
 
     def get_sequence(self, length, difficulty):
         return logic.get_sequence(length, difficulty)
