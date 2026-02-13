@@ -5,6 +5,7 @@ import flet as ft
 from routes import about
 from utils import elements
 from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
+from utils.constants import Difficulty
 from utils.utils import is_int
 
 from . import abstract
@@ -48,11 +49,11 @@ def build_view(page: ft.Page) -> ft.View:
         label_style=ft.TextStyle(size=TEXT_SIZE),
         value="random",
         options=[
-            ft.DropdownOption(key="easy", text="Низька"),
-            ft.DropdownOption(key="medium", text="Середня"),
-            ft.DropdownOption(key="hard", text="Висока"),
-            ft.DropdownOption(key="expert", text="Надвисока"),
-            ft.DropdownOption(key="random", text="Випадкова"),
+            ft.DropdownOption(key=Difficulty.EASY.value, text="Низька"),
+            ft.DropdownOption(key=Difficulty.MEDIUM.value, text="Середня"),
+            ft.DropdownOption(key=Difficulty.HARD.value, text="Висока"),
+            ft.DropdownOption(key=Difficulty.EXPERT.value, text="Надвисока"),
+            ft.DropdownOption(key=Difficulty.RANDOM.value, text="Випадкова"),
         ],
         on_select=_rerun,
     )

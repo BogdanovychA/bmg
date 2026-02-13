@@ -9,4 +9,3 @@ class Difficulty(Enum):
     HARD = "hard"
     EXPERT = "expert"
     RANDOM = "random"
-    ALL = "all"

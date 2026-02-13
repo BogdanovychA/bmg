@@ -330,8 +330,6 @@ def get_game(length: int, difficulty: Difficulty = Difficulty.RANDOM) -> tuple:
             the_tuple = hard
         case Difficulty.EXPERT:
             the_tuple = expert
-        case Difficulty.ALL:
-            the_tuple = easy + medium + hard + expert
         case Difficulty.RANDOM | _:
             the_tuple = random.choice((easy, medium, hard, expert))
 
