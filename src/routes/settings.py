@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
-from routes import about
+from routes import author
 from utils import elements
 from utils.config import BASE_URL, TEXT_SIZE
 from utils.constants import GameMode
@@ -79,6 +79,6 @@ def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
             #     alignment=ft.MainAxisAlignment.CENTER,
             # ),
             elements.back_button(page),
-            about.button(page),
+            author.button(page),
         ],
     )

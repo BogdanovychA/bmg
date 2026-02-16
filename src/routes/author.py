@@ -8,7 +8,7 @@ from utils import elements
 from utils.config import BASE_URL, TEXT_SIZE
 
 TITLE = "Про автора"
-ROUTE = BASE_URL + "/about"
+ROUTE = BASE_URL + "/author"
 
 
 def button(page) -> ft.Button:

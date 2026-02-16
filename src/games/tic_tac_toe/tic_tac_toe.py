@@ -2,7 +2,7 @@
 
 import flet as ft
 
-from routes import about
+from routes import author
 from utils import elements
 from utils.config import NUMBER_42, TEXT_SIZE
 from utils.constants import GameMode
@@ -241,6 +241,6 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Button("Автохід", on_click=_click, data=NUMBER_42),
             ft.Text(""),
             elements.back_button(page),
-            about.button(page),
+            author.button(page),
         ],
     )

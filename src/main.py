@@ -8,7 +8,7 @@ from flet_storage import FletStorage
 
 from games.next_namber import next_number
 from games.tic_tac_toe import tic_tac_toe
-from routes import about, error404, root, settings
+from routes import author, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
 from utils.config import APP_NAME, TEXT_SIZE
@@ -44,7 +44,7 @@ def build_main_view(page: ft.Page) -> ft.View:
                 ),
             ),
             ft.Text(""),
-            about.button(page),
+            author.button(page),
         ],
     )
 
@@ -73,8 +73,8 @@ async def main(page: ft.Page):
                 page.views.append(tic_tac_toe.build_view(page))
             case settings.ROUTE:
                 page.views.append(settings.build_view(page, storage))
-            case about.ROUTE:
-                page.views.append(about.build_view(page))
+            case author.ROUTE:
+                page.views.append(author.build_view(page))
             case _:
                 if page.route != root.ROUTE:
                     page.views.append(error404.build_view(page))
