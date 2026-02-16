@@ -64,9 +64,8 @@ def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
         controls=[
             elements.app_bar(TITLE, page),
             ft.Text(""),
-            ft.Text(TITLE, size=TEXT_SIZE),
-            ft.Text(""),
             ft.Text("Режим роботи застосунку", size=TEXT_SIZE),
+            ft.Text(""),
             game_mode_selector,
             ft.Text(""),
             text,
