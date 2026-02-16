@@ -4,6 +4,7 @@ import asyncio
 
 import flet as ft
 
+from routes import about
 from utils import elements
 from utils.config import BASE_URL, TEXT_SIZE
 
@@ -38,28 +39,11 @@ def build_view(page: ft.Page) -> ft.View:
                 spans=[
                     elements.link("Домашня сторінка", "https://www.bogdanovych.org"),
                     ft.TextSpan("\n"),
-                    elements.link("GitHub", "https://github.com/BogdanovychA/bmg"),
-                ],
-            ),
-            ft.Text(
-                size=TEXT_SIZE,
-                spans=[
                     elements.link("Інші застосунки", "https://apps.bogdanovych.org"),
-                ],
-            ),
-            ft.Text(
-                "Створено за підтримки\nГО «Фундація.101»",
-                size=TEXT_SIZE,
-            ),
-            ft.Text(
-                size=TEXT_SIZE,
-                spans=[
-                    elements.link(
-                        "Підтримати проєкт", "https://send.monobank.ua/jar/8Qn1woNnC7"
-                    ),
                 ],
             ),
             ft.Text(""),
             elements.back_button(page),
+            about.button(page),
         ],
     )

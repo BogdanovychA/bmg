@@ -2,7 +2,7 @@
 
 import flet as ft
 
-from routes import author
+from routes import about, author
 from utils import elements
 from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
 from utils.constants import Difficulty, GameMode
@@ -115,6 +115,12 @@ def build_view(page: ft.Page) -> ft.View:
             ),
             ft.Text(""),
             elements.back_button(page),
-            author.button(page),
+            ft.Row(
+                controls=[
+                    author.button(page),
+                    about.button(page),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
         ],
     )
