@@ -4,7 +4,7 @@ import asyncio
 
 import flet as ft
 
-from routes import root
+from routes import root, settings
 from utils.config import LINK_COLOR, TITLE_SIZE
 
 
@@ -16,10 +16,16 @@ def back_button(page) -> ft.Button:
     )
 
 
-def app_bar(title) -> ft.AppBar:
+def app_bar(title, page) -> ft.AppBar:
     return ft.AppBar(
         title=ft.Text(title, size=TITLE_SIZE, weight=ft.FontWeight.BOLD),
         center_title=True,
+        actions=[
+            ft.IconButton(
+                ft.Icons.MENU,
+                on_click=lambda: asyncio.create_task(page.push_route(settings.ROUTE)),
+            ),
+        ],
         bgcolor=ft.Colors.SURFACE_CONTAINER,
     )
 

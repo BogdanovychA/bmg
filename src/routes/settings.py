@@ -1,0 +1,84 @@
+# -*- coding: utf-8 -*-
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
+import flet as ft
+
+from routes import about
+from utils import elements
+from utils.config import BASE_URL, TEXT_SIZE
+from utils.constants import GameMode
+
+if TYPE_CHECKING:
+    from flet_storage import FletStorage
+
+TITLE = "Налаштування"
+ROUTE = BASE_URL + "/settings"
+
+
+def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
+    """Екран налаштувань"""
+
+    async def _switch(event: ft.Event) -> None:
+        """Обробник перемикача вкл/викл будильника"""
+
+        value = event.control.selected[0]
+
+        page.session.store.set("game_mode", value)
+        await storage.set("game_mode", value)
+
+        if value == GameMode.OFFLINE.value:
+            text.value = "Локальний режим роботи (рекомендовано)"
+        else:
+            text.value = "Робота по API (не рекомендується)"
+
+        text.update()
+
+    game_mode_selector = ft.SegmentedButton(
+        selected=[page.session.store.get("game_mode")],
+        allow_empty_selection=False,
+        allow_multiple_selection=False,
+        show_selected_icon=False,
+        segments=[
+            ft.Segment(
+                value=GameMode.OFFLINE.value,
+                label=ft.Text(GameMode.OFFLINE.value),
+                icon=ft.Icons.STAY_CURRENT_PORTRAIT,
+            ),
+            ft.Segment(
+                value=GameMode.ONLINE.value,
+                label=ft.Text(GameMode.ONLINE.value),
+                icon=ft.Icons.CLOUD_QUEUE,
+            ),
+        ],
+        on_change=_switch,
+    )
+
+    text = ft.Text("", size=TEXT_SIZE)
+
+    return ft.View(
+        route=ROUTE,
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        controls=[
+            elements.app_bar(TITLE, page),
+            ft.Text(""),
+            ft.Text(TITLE, size=TEXT_SIZE),
+            ft.Text(""),
+            ft.Text("Режим роботи застосунку", size=TEXT_SIZE),
+            game_mode_selector,
+            ft.Text(""),
+            text,
+            ft.Text(""),
+            # ft.Row(
+            #     controls=[
+            #         author.button(page),
+            #         about.button(page),
+            #     ],
+            #     alignment=ft.MainAxisAlignment.CENTER,
+            # ),
+            elements.back_button(page),
+            about.button(page),
+        ],
+    )

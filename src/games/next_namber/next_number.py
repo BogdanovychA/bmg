@@ -89,7 +89,7 @@ def build_view(page: ft.Page) -> ft.View:
         route=ROUTE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(TITLE),
+            elements.app_bar(TITLE, page),
             ft.Text(""),
             ft.Text(SUB_TITLE, size=TEXT_SIZE),
             quest_block,

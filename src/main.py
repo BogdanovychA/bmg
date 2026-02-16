@@ -8,7 +8,7 @@ from flet_storage import FletStorage
 
 from games.next_namber import next_number
 from games.tic_tac_toe import tic_tac_toe
-from routes import about, error404, root
+from routes import about, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
 from utils.config import APP_NAME, TEXT_SIZE
@@ -21,7 +21,7 @@ def build_main_view(page: ft.Page) -> ft.View:
         route=root.ROUTE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
-            elements.app_bar(root.TITLE),
+            elements.app_bar(root.TITLE, page),
             ft.Text(""),
             ft.Image(
                 src="/images/logo_alpha.png",  # Посилання на картинку
@@ -71,6 +71,8 @@ async def main(page: ft.Page):
                 page.views.append(next_number.build_view(page))
             case tic_tac_toe.ROUTE:
                 page.views.append(tic_tac_toe.build_view(page))
+            case settings.ROUTE:
+                page.views.append(settings.build_view(page, storage))
             case about.ROUTE:
                 page.views.append(about.build_view(page))
             case _:
@@ -96,8 +98,7 @@ async def main(page: ft.Page):
             page.session.store.set(name, value)
 
         await __init_obj("client_id", str(uuid.uuid4()))
-
-        page.session.store.set("game_mode", GameMode.OFFLINE.value)
+        await __init_obj("game_mode", GameMode.OFFLINE.value)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
