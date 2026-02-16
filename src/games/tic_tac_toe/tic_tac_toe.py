@@ -1,26 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from enum import Enum
-
 import flet as ft
 
 from routes import about
 from utils import elements
-from utils.config import API_URL, NUMBER_42, TEXT_SIZE
+from utils.config import NUMBER_42, TEXT_SIZE
 from utils.constants import GameMode
+from utils.exceptions import GameAPIError
 
 from . import abstract
+from .constants import Symbol
 
 ROUTE = "/tic-tac-toe"
 TITLE = "Хрестики-нулики"
 SUB_TITLE = "Обери за кого грати"
-
-
-class Symbol(Enum):
-    X = "X"
-    O = "O"
-    EMPTY = "none"
-
 
 X_COLOR = ft.Colors.BLUE_ACCENT
 O_COLOR = ft.Colors.RED_ACCENT
@@ -31,9 +24,7 @@ CELL_RADIUS = 10
 
 EMPTY_BOARD = [Symbol.EMPTY.value] * 9
 
-BASE_API_URL = f"{API_URL}/ttt"
-API_HEADERS = {'accept': 'application/json', 'Content-Type': 'application/json'}
-ERROR_TEXT = "Сталася помилка при запиті до API"
+ERROR_TEXT = "123"
 
 
 def build_view(page: ft.Page) -> ft.View:
@@ -52,17 +43,18 @@ def build_view(page: ft.Page) -> ft.View:
         if game_finished:  # Ігноруємо, якщо гра закінчилася
             return
 
-        winner = client.check_winner(board)
-        match winner:
-            case Symbol.X.value | Symbol.O.value:
-                message_block.value = f"Перемога {winner}"
-                game_finished = True
-            case "draw":
-                message_block.value = "Нічия"
-                game_finished = True
+        try:  # На випадок, якщо працюємо по API
+            winner = client.check_winner(board)
+            match winner:
+                case Symbol.X.value | Symbol.O.value:
+                    message_block.value = f"Перемога {winner}"
+                    game_finished = True
+                case Symbol.DRAW.value:
+                    message_block.value = "Нічия"
+                    game_finished = True
 
-        if ERROR_TEXT in winner:
-            message_block.value = winner
+        except GameAPIError as e:
+            message_block.value = str(e)
             game_finished = True
 
         message_block.update()
@@ -74,18 +66,15 @@ def build_view(page: ft.Page) -> ft.View:
 
         nonlocal game_finished
 
-        ai_move = client.best_move(board, symbol)
-
-        if isinstance(ai_move, str):  # Якщо помилка API
-            message_block.value = ai_move
-            message_block.update()
-            game_finished = True
-        elif isinstance(ai_move, int):  # Основний робочий блок
+        try:  # На випадок, якщо працюємо по API
+            ai_move = client.best_move(board, symbol)
             board[ai_move] = symbol
             board_layout.controls = _render_board()
             board_layout.update()
-        else:  # Інша непередбачувана помилка (вірогідність дуже низька)
-            print("Непередбачуваний тип")
+
+        except GameAPIError as e:
+            message_block.value = str(e)
+            game_finished = True
 
         _check_game_status()
 
@@ -102,6 +91,7 @@ def build_view(page: ft.Page) -> ft.View:
 
         async def __run_ai() -> None:
             """Асинхронна обгортка для ходу ШІ"""
+
             _ai_move(ai)
 
         if game_finished:  # Ігноруємо, якщо гра закінчилася

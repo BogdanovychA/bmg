@@ -5,8 +5,10 @@ from abc import ABC, abstractmethod
 import httpx
 
 from utils.config import API_URL
+from utils.exceptions import GameAPIError
 
 from . import logic
+from .constants import Symbol
 
 
 class GameData(ABC):
@@ -34,7 +36,7 @@ class APIData(GameData):
         }
         self.ERROR_TEXT = "Сталася помилка при запиті до API"
 
-    def check_winner(self, board: list) -> str:
+    def check_winner(self, board: list) -> str | None:
 
         target_url = f"{self.BASE_API_URL}/check"
         headers = self.API_HEADERS
@@ -51,13 +53,13 @@ class APIData(GameData):
         except (httpx.RequestError, httpx.HTTPStatusError) as e:
             text = f"{self.ERROR_TEXT}: {e}"
             print(text)
-            return text
+            raise GameAPIError(text) from e
         except Exception as e:
             text = f"Непередбачувана помилка: {e}"
             print(text)
-            return text
+            raise GameAPIError(text) from e
 
-    def best_move(self, board: list, player: str) -> int | str:
+    def best_move(self, board: list, player: str) -> int:
         """Звернення до API для обрахування кращого ходу"""
 
         target_url = f"{self.BASE_API_URL}/move"
@@ -75,18 +77,23 @@ class APIData(GameData):
         except (httpx.RequestError, httpx.HTTPStatusError) as e:
             text = f"{self.ERROR_TEXT}: {e}"
             print(text)
-            return text
+            raise GameAPIError(text) from e
         except Exception as e:
             text = f"Непередбачувана помилка: {e}"
             print(text)
-            return text
+            raise GameAPIError(text) from e
 
 
 class SelfData(GameData):
     """Робота локально"""
 
     def check_winner(self, board: list) -> str:
-        pass
+        return logic.check_winner(board)
 
     def best_move(self, board: list, player: str) -> int | str:
-        pass
+
+        return logic.best_move(
+            board,
+            player,
+            Symbol.O.value if player == Symbol.X.value else Symbol.X.value,
+        )
