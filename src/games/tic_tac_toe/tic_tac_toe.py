@@ -3,11 +3,13 @@
 from enum import Enum
 
 import flet as ft
-import httpx
 
 from routes import about
 from utils import elements
 from utils.config import API_URL, NUMBER_42, TEXT_SIZE
+from utils.constants import GameMode
+
+from . import abstract
 
 ROUTE = "/tic-tac-toe"
 TITLE = "Хрестики-нулики"
@@ -34,52 +36,6 @@ API_HEADERS = {'accept': 'application/json', 'Content-Type': 'application/json'}
 ERROR_TEXT = "Сталася помилка при запиті до API"
 
 
-def check_winner(board: list) -> str:
-    """Звернення до API для перевірки чи є переможець на дошці"""
-
-    target_url = f"{BASE_API_URL}/check"
-    headers = API_HEADERS
-    payload = board
-
-    try:
-        response = httpx.post(target_url, headers=headers, json=payload, timeout=10.0)
-
-        response.raise_for_status()
-        return response.json()["result"]
-
-    except (httpx.RequestError, httpx.HTTPStatusError) as e:
-        text = f"{ERROR_TEXT}: {e}"
-        print(text)
-        return text
-    except Exception as e:
-        text = f"Непередбачувана помилка: {e}"
-        print(text)
-        return text
-
-
-def best_move(board: list, player: str) -> int | str:
-    """Звернення до API для обрахування кращого ходу"""
-
-    target_url = f"{BASE_API_URL}/move"
-    headers = API_HEADERS
-    payload = {"board": board, "max_player_symbol": player}
-
-    try:
-        response = httpx.post(target_url, headers=headers, json=payload, timeout=15.0)
-
-        response.raise_for_status()
-        return response.json()
-
-    except (httpx.RequestError, httpx.HTTPStatusError) as e:
-        text = f"{ERROR_TEXT}: {e}"
-        print(text)
-        return text
-    except Exception as e:
-        text = f"Непередбачувана помилка: {e}"
-        print(text)
-        return text
-
-
 def build_view(page: ft.Page) -> ft.View:
     """Побудова головного екрану гри"""
 
@@ -96,7 +52,7 @@ def build_view(page: ft.Page) -> ft.View:
         if game_finished:  # Ігноруємо, якщо гра закінчилася
             return
 
-        winner = check_winner(board)
+        winner = client.check_winner(board)
         match winner:
             case Symbol.X.value | Symbol.O.value:
                 message_block.value = f"Перемога {winner}"
@@ -118,7 +74,7 @@ def build_view(page: ft.Page) -> ft.View:
 
         nonlocal game_finished
 
-        ai_move = best_move(board, symbol)
+        ai_move = client.best_move(board, symbol)
 
         if isinstance(ai_move, str):  # Якщо помилка API
             message_block.value = ai_move
@@ -232,6 +188,19 @@ def build_view(page: ft.Page) -> ft.View:
         on_change=_switch,
     )
 
+    def _create_client() -> abstract.GameData:
+        """
+        Фабрика об'єктів.
+        Створює клієнт залежно від режиму гри online/offline
+        """
+
+        game_mode = page.session.store.get("game_mode")
+
+        if game_mode == GameMode.OFFLINE.value:
+            return abstract.SelfData()
+
+        return abstract.APIData()
+
     def _init(player_symbol: str) -> None:
         """Ініціалізація стану гри або його зміна при перемиканні"""
         nonlocal player, ai, board, game_finished
@@ -249,6 +218,8 @@ def build_view(page: ft.Page) -> ft.View:
     ai = ""
     game_finished = False
     message_block = ft.Text(size=TEXT_SIZE)
+
+    client = _create_client()
 
     _init(Symbol.X.value)
 
