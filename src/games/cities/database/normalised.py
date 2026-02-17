@@ -65,3 +65,8 @@ NORMALISED = {
     "ю": set(map(str.lower, yu_ua)),
     "я": set(map(str.lower, ya_ua)),
 }
+
+if __name__ == "__main__":
+    print("NORMALISED:")
+    for key, value in NORMALISED.items():
+        print(f"{key}: {value}")
