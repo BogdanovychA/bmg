@@ -24,8 +24,6 @@ CELL_RADIUS = 10
 
 EMPTY_BOARD = [Symbol.EMPTY.value] * 9
 
-ERROR_TEXT = "123"
-
 
 def build_view(page: ft.Page) -> ft.View:
     """Побудова головного екрану гри"""

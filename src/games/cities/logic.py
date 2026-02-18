@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .database import blacklists, db
 from .types import CityStorage, UsedCities
-from .utils import create_available, normalised
 
 
 def main(available: CityStorage):
@@ -16,8 +14,8 @@ def main(available: CityStorage):
 
 if __name__ == "__main__":
 
-    available_cities = create_available(
-        normalised(db.CITIES), normalised(blacklists.CITIES)
-    )
+    from games.cities.abstract import SelfData
 
-    main(available_cities)
+    client = SelfData()
+
+    main(available=client.get_cities())
