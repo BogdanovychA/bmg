@@ -1,20 +1,19 @@
 # -*- coding: utf-8 -*-
 
-type CityStorage = dict[str, set[str]]
-type UsedCities = set[str]
-
-from .database.blacklists import NORMALISED_BLACKLIST
+from .database import blacklists
 from .database.normalised import NORMALISED
+from .types import CityStorage, UsedCities
 
 
 def create_available_cities() -> CityStorage:
     return {
-        letter: (cities - NORMALISED_BLACKLIST.get(letter, set()))
+        letter: (cities - blacklists.CITIES.get(letter, set()))
         for letter, cities in NORMALISED.items()
     }
 
 
 if __name__ == "__main__":
+
     available_cities: CityStorage = create_available_cities()
     used_cities: UsedCities = set()
 

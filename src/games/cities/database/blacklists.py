@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-BLACKLIST_LETTERS = {
+LETTERS = {
     "и",
     "ь",
 }
 
-BLACKLIST_SYMBOLS = {
+SYMBOLS = {
     "'",
     "-",
     " ",
 }
 
-BLACKLIST = {
+CITIES = {
     "а": {
         "Абакан",  # росія
         "Ангарськ",  # росія
@@ -196,11 +196,8 @@ BLACKLIST = {
     },
 }
 
-NORMALISED_BLACKLIST = {
-    key: set(map(str.lower, cities)) for key, cities in BLACKLIST.items()
-}
-
 if __name__ == "__main__":
-    print("NORMALISED_BLACKLIST:")
-    for key, value in NORMALISED_BLACKLIST.items():
+    from games.cities.utils import normalised
+
+    for key, value in normalised(CITIES).items():
         print(f"{key}: {value}")
