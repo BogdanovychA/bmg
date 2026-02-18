@@ -17,6 +17,7 @@ class Event:
     error: bool = False
     city: str = ""
     message: str = ""
+    game_over: bool = False
 
 
 @dataclass
@@ -53,15 +54,20 @@ def main(cities: CityStorage):
     used: UsedCities = set()
     all_letters = tuple(cities.keys())
 
-    game_finished = False
     move = Move.AI
     letter = random.choice(all_letters)  # Перша літера нового міста
     response = Input()
     char = ""  # Остання літера попереднього міста
 
-    while not game_finished:
+    while True:
 
         if move == Move.AI:
+
+            if not cities.get(letter):  # None або порожній set — обидва False
+                return Event(
+                    game_over=True,
+                    message=f'Ви виграли! Більше немає міст на "{letter.upper()}"',
+                )
 
             city = random.choice(list(cities[letter]))
 
@@ -69,8 +75,14 @@ def main(cities: CityStorage):
 
             char = last_letter(city, all_letters)
 
+            if not cities.get(char):
+                return Event(
+                    game_over=True,
+                    city=city.upper(),
+                    message=f'Ви програли! Більше немає міст на "{char.upper()}"',
+                )
+
             response = yield Event(
-                error=False,
                 city=city.upper(),
                 message=f'Назви місто на літеру "{char.upper()}"',
             )
@@ -128,6 +140,7 @@ if __name__ == "__main__":
             if event.city:
                 print(event.city)
             event = game.send(Input(city=input(f"{event.message}: ")))
-        except StopIteration:
-            print("Гра завершена")
+        except StopIteration as e:
+            final_event = e.value
+            print(final_event.message)
             break
