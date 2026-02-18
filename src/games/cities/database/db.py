@@ -32,41 +32,42 @@ from .cities.yu_ua import yu_ua  # "ю"
 from .cities.z_ua import z_ua  # "з"
 from .cities.zh_ua import zh_ua  # "ж"
 
-NORMALISED = {
-    "а": set(map(str.lower, a_ua)),
-    "б": set(map(str.lower, b_ua)),
-    "в": set(map(str.lower, v_ua)),
-    "г": set(map(str.lower, g_ua)),
-    "ґ": set(map(str.lower, ge_ua)),
-    "д": set(map(str.lower, d_ua)),
-    "е": set(map(str.lower, e_ua)),
-    "є": set(map(str.lower, ye_ua)),
-    "ж": set(map(str.lower, zh_ua)),
-    "з": set(map(str.lower, z_ua)),
-    "і": set(map(str.lower, i_ua)),
-    "ї": set(map(str.lower, yi_ua)),
-    "й": set(map(str.lower, j_ua)),
-    "к": set(map(str.lower, k_ua)),
-    "л": set(map(str.lower, l_ua)),
-    "м": set(map(str.lower, m_ua)),
-    "н": set(map(str.lower, n_ua)),
-    "о": set(map(str.lower, o_ua)),
-    "п": set(map(str.lower, p_ua)),
-    "р": set(map(str.lower, r_ua)),
-    "с": set(map(str.lower, s_ua)),
-    "т": set(map(str.lower, t_ua)),
-    "у": set(map(str.lower, u_ua)),
-    "ф": set(map(str.lower, f_ua)),
-    "х": set(map(str.lower, kh_ua)),
-    "ц": set(map(str.lower, ts_ua)),
-    "ч": set(map(str.lower, ch_ua)),
-    "ш": set(map(str.lower, sh_ua)),
-    "щ": set(map(str.lower, shch_ua)),
-    "ю": set(map(str.lower, yu_ua)),
-    "я": set(map(str.lower, ya_ua)),
+CITIES = {
+    "а": a_ua,
+    "б": b_ua,
+    "в": v_ua,
+    "г": g_ua,
+    "ґ": ge_ua,
+    "д": d_ua,
+    "е": e_ua,
+    "є": ye_ua,
+    "ж": zh_ua,
+    "з": z_ua,
+    "і": i_ua,
+    "ї": yi_ua,
+    "й": j_ua,
+    "к": k_ua,
+    "л": l_ua,
+    "м": m_ua,
+    "н": n_ua,
+    "о": o_ua,
+    "п": p_ua,
+    "р": r_ua,
+    "с": s_ua,
+    "т": t_ua,
+    "у": u_ua,
+    "ф": f_ua,
+    "х": kh_ua,
+    "ц": ts_ua,
+    "ч": ch_ua,
+    "ш": sh_ua,
+    "щ": shch_ua,
+    "ю": yu_ua,
+    "я": ya_ua,
 }
 
 if __name__ == "__main__":
-    print("NORMALISED:")
-    for key, value in NORMALISED.items():
+    from games.cities.utils import normalised
+
+    for key, value in normalised(CITIES).items():
         print(f"{key}: {value}")

@@ -1,22 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from .database import blacklists
-from .database.normalised import NORMALISED
+from .database import blacklists, db
 from .types import CityStorage, UsedCities
+from .utils import create_available, normalised
 
 
-def create_available_cities() -> CityStorage:
-    return {
-        letter: (cities - blacklists.CITIES.get(letter, set()))
-        for letter, cities in NORMALISED.items()
-    }
+def main(available: CityStorage):
+    used: UsedCities = set()
+
+    for key, value in available.items():
+        print(f"{key}: {value}")
+
+    print(used)
 
 
 if __name__ == "__main__":
 
-    available_cities: CityStorage = create_available_cities()
-    used_cities: UsedCities = set()
+    available_cities = create_available(
+        normalised(db.CITIES), normalised(blacklists.CITIES)
+    )
 
-    print("available_cities:")
-    for key, value in available_cities.items():
-        print(f"{key}: {value}")
+    main(available_cities)
