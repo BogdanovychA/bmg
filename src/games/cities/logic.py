@@ -25,6 +25,10 @@ class Input:
 
 
 def last_letter(city: str, letters: tuple) -> str:
+    """
+    Повертає останню літеру міста, з урахуванням заборонених символів.
+    Обережно, рекурсія! :)
+    """
 
     if not city:
         return ""
@@ -36,30 +40,35 @@ def last_letter(city: str, letters: tuple) -> str:
 
 
 def main(cities: CityStorage):
+    """Основна функція-генератор"""
 
-    def _remove_city(first_char: str, the_city: str):
-        cities[first_char].discard(the_city)
-        used.add(the_city)
+    def _remove_city():
+        """
+        Допоміжна функція для видалення використаного міста з основного
+        словника та додавання в сет використаних міст
+        """
+        cities[letter].discard(city)
+        used.add(city)
 
     used: UsedCities = set()
     all_letters = tuple(cities.keys())
 
     game_finished = False
     move = Move.AI
-    letter = random.choice(all_letters)
+    letter = random.choice(all_letters)  # Перша літера нового міста
     response = Input()
-    char = ""
+    char = ""  # Остання літера попереднього міста
 
     while not game_finished:
-
-        print(used)
 
         if move == Move.AI:
 
             city = random.choice(list(cities[letter]))
-            _remove_city(first_char=letter, the_city=city)
+
+            _remove_city()
 
             char = last_letter(city, all_letters)
+
             response = yield Event(
                 error=False,
                 city=city.upper(),
@@ -100,7 +109,7 @@ def main(cities: CityStorage):
                 )
                 continue
 
-            _remove_city(first_char=char, the_city=city)
+            _remove_city()
 
             letter = last_letter(city, all_letters)
             move = Move.AI
