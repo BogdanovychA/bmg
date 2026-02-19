@@ -13,7 +13,7 @@ from . import abstract, logic
 
 ROUTE = "/cities"
 TITLE = "Міста"
-SUB_TITLE = "Називай місто на останню літеру:"
+SUB_TITLE = "Називай місто на останню літеру"
 
 
 class GameClient:
