@@ -25,7 +25,7 @@ class Input:
     city: str = ""
 
 
-def last_letter(city: str, letters: tuple) -> str:
+def get_last_letter(city: str, letters: tuple) -> str:
     """
     Повертає останню літеру міста, з урахуванням заборонених символів.
     Обережно, рекурсія! :)
@@ -37,7 +37,7 @@ def last_letter(city: str, letters: tuple) -> str:
     if city[-1] in letters:
         return city[-1]
     else:
-        return last_letter(city[:-1], letters)
+        return get_last_letter(city[:-1], letters)
 
 
 def main(cities: CityStorage):
@@ -48,43 +48,43 @@ def main(cities: CityStorage):
         Допоміжна функція для видалення використаного міста з основного
         словника та додавання в сет використаних міст
         """
-        cities[letter].discard(city)
+        cities[first_letter].discard(city)
         used.add(city)
 
     used: UsedCities = set()
     all_letters = tuple(cities.keys())
 
     move = Move.AI
-    letter = random.choice(all_letters)  # Перша літера нового міста
+    first_letter = random.choice(all_letters)  # Перша літера нового міста
     response = Input()
-    char = ""  # Остання літера попереднього міста
+    last_letter = ""  # Остання літера попереднього міста
 
     while True:
 
         if move == Move.AI:
 
-            if not cities.get(letter):  # None або порожній set — обидва False
+            if not cities.get(first_letter):  # None або порожній set — обидва False
                 return Event(
                     game_over=True,
-                    message=f'Ви виграли! Більше немає міст на "{letter.upper()}"',
+                    message=f'Ви виграли! Більше немає міст на "{first_letter.upper()}"',
                 )
 
-            city = random.choice(list(cities[letter]))
+            city = random.choice(list(cities[first_letter]))
 
             _remove_city()
 
-            char = last_letter(city, all_letters)
+            last_letter = get_last_letter(city, all_letters)
 
-            if not cities.get(char):
+            if not cities.get(last_letter):
                 return Event(
                     game_over=True,
                     city=city.upper(),
-                    message=f'Ви програли! Більше немає міст на "{char.upper()}"',
+                    message=f'Ви програли! Більше немає міст на "{last_letter.upper()}"',
                 )
 
             response = yield Event(
                 city=city.upper(),
-                message=f'Назви місто на літеру "{char.upper()}"',
+                message=f'Назви місто на літеру "{last_letter.upper()}"',
             )
 
             move = Move.PLAYER
@@ -96,34 +96,34 @@ def main(cities: CityStorage):
             if not city:
                 response = yield Event(
                     error=True,
-                    message=f'Ти нічого не ввів. Введи місто на літеру "{char.upper()}"',
+                    message=f'Ти нічого не ввів. Введи місто на літеру "{last_letter.upper()}"',
                 )
                 continue
 
-            letter = city[0]
+            first_letter = city[0]
 
-            if letter != char:
+            if first_letter != last_letter:
                 response = yield Event(
                     error=True,
-                    message=f'Місто "{city.upper()}" не починається на літеру "{char.upper()}". Введи інше',
+                    message=f'Місто "{city.upper()}" не починається на літеру "{last_letter.upper()}". Введи інше',
                 )
                 continue
             elif city in used:
                 response = yield Event(
                     error=True,
-                    message=f'Місто "{city.upper()}" вже було використано. Введи інше на літеру "{char.upper()}"',
+                    message=f'Місто "{city.upper()}" вже було використано. Введи інше на літеру "{last_letter.upper()}"',
                 )
                 continue
-            elif letter not in cities or city not in cities[letter]:
+            elif first_letter not in cities or city not in cities[first_letter]:
                 response = yield Event(
                     error=True,
-                    message=f'Місто "{city.upper()}" не існує. Введи інше на літеру "{char.upper()}"',
+                    message=f'Місто "{city.upper()}" не існує. Введи інше на літеру "{last_letter.upper()}"',
                 )
                 continue
 
             _remove_city()
 
-            letter = last_letter(city, all_letters)
+            first_letter = get_last_letter(city, all_letters)
             move = Move.AI
 
 
