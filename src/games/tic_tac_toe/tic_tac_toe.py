@@ -224,19 +224,19 @@ def build_view(page: ft.Page) -> ft.View:
         controls=[
             elements.app_bar(TITLE, page),
             ft.Text(SUB_TITLE, size=TEXT_SIZE),
-            ft.Row(
-                [
-                    symbol_selector,
-                    ft.IconButton(ft.Icons.REFRESH, on_click=_rerun),
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-            ),
+            symbol_selector,
             ft.Text(""),
             message_block,
             ft.Text(""),
             board_layout,
             ft.Text(""),
-            ft.Button("Автохід", on_click=_click, data=NUMBER_42),
+            ft.Row(
+                [
+                    ft.IconButton(ft.Icons.REFRESH, on_click=_rerun),
+                    ft.IconButton(ft.Icons.LIGHTBULB, on_click=_click, data=NUMBER_42),
+                ],
+                alignment=ft.MainAxisAlignment.CENTER,
+            ),
             ft.Text(""),
             elements.back_button(page),
             ft.Row(

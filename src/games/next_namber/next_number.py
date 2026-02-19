@@ -12,7 +12,7 @@ from . import abstract
 
 ROUTE = "/next-number"
 TITLE = "Вгадай наступне число"
-SUB_TITLE = "Визнач, що це за послідовність\nта яке число має бути наступним:"
+SUB_TITLE = "Визнач, що це за послідовність\nта яке число має бути наступним"
 
 
 def build_view(page: ft.Page) -> ft.View:
@@ -77,7 +77,7 @@ def build_view(page: ft.Page) -> ft.View:
     hint = ""
     quest_block = ft.Text("", size=TEXT_SIZE)
     answer_block = ft.TextField(
-        value="", width=100, bgcolor=FORM_BG_COLOR, border_color=FORM_BORDER_COLOR
+        value="", width=150, bgcolor=FORM_BG_COLOR, border_color=FORM_BORDER_COLOR
     )
     message_block = ft.Text("", size=TEXT_SIZE)
 
@@ -97,7 +97,6 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text(""),
             ft.Row(
                 [
-                    ft.IconButton(ft.Icons.REFRESH, on_click=_rerun),
                     answer_block,
                     ft.IconButton(ft.Icons.DONE_OUTLINE, on_click=_ok),
                 ],
@@ -108,8 +107,9 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text(""),
             ft.Row(
                 [
-                    ft.Button("Підказка", on_click=_hint),
-                    ft.Button("Відповідь", on_click=_answer),
+                    ft.IconButton(ft.Icons.REFRESH, on_click=_rerun),
+                    ft.IconButton(ft.Icons.LIGHTBULB, on_click=_hint),
+                    ft.IconButton(ft.Icons.QUESTION_MARK, on_click=_answer),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),

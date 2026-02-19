@@ -107,7 +107,6 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text(""),
             ft.Row(
                 [
-                    ft.IconButton(ft.Icons.REFRESH, on_click=_rerun),
                     answer_block,
                     ft.IconButton(ft.Icons.DONE_OUTLINE, on_click=_ok),
                 ],
@@ -118,7 +117,8 @@ def build_view(page: ft.Page) -> ft.View:
             ft.Text(""),
             ft.Row(
                 [
-                    ft.Button("Відповідь", on_click=_answer),
+                    ft.IconButton(ft.Icons.REFRESH, on_click=_rerun),
+                    ft.IconButton(ft.Icons.QUESTION_MARK, on_click=_answer),
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
