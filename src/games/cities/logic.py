@@ -120,7 +120,7 @@ def main(all_cities: CityStorage):
 
             first_letter = city[0]
 
-            if city in blacklist[first_letter]:
+            if first_letter in blacklist and city in blacklist[first_letter]:
                 msg = f'Місто «{city}» належить до території росії чи білорусі. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
                 response = yield Event(
                     error=True,
