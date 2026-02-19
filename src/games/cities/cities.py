@@ -38,6 +38,9 @@ def build_view(page: ft.Page) -> ft.View:
         if not client.game:
             return
 
+        if not answer_block.value:
+            return
+
         try:
             client.event = client.game.send(logic.Input(city=answer_block.value))
             if not client.event.error:

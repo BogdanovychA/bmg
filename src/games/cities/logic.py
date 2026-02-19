@@ -106,7 +106,7 @@ def main(all_cities: CityStorage):
 
         elif move == Move.PLAYER:
 
-            city = response.city.lower()
+            city = response.city.lower().strip()
 
             if not city:
                 msg = f'Ти нічого не ввів. Назви місто на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
