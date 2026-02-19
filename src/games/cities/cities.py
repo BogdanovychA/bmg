@@ -10,6 +10,7 @@ from utils import elements
 from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
 
 from . import abstract, logic
+from .utils import make_used_string
 
 ROUTE = "/cities"
 TITLE = "Міста світу"
@@ -47,6 +48,7 @@ def build_view(page: ft.Page) -> ft.View:
                 city_block.value = client.event.city
                 message_block.value = client.event.message
                 answer_block.value = ""
+                used_block.value = make_used_string(client.event.used_cities)
             else:
                 message_block.value = client.event.message
 
@@ -69,7 +71,7 @@ def build_view(page: ft.Page) -> ft.View:
         if not client.game:
             return
 
-        answer_block.value = random.choice(list(client.event.unused_cities)).upper()
+        answer_block.value = random.choice(list(client.event.available_cities)).title()
         event.page.update()
 
     def _rerun(event: ft.Event) -> None:
@@ -81,6 +83,7 @@ def build_view(page: ft.Page) -> ft.View:
         city_block.value = client.event.city
         message_block.value = client.event.message
         answer_block.value = ""
+        used_block.value = make_used_string(client.event.used_cities)
 
         event.page.update()
 
@@ -94,6 +97,7 @@ def build_view(page: ft.Page) -> ft.View:
     answer_block = ft.TextField(
         value="", width=250, bgcolor=FORM_BG_COLOR, border_color=FORM_BORDER_COLOR
     )
+    used_block = ft.Text(make_used_string(client.event.used_cities))
 
     return ft.View(
         route=ROUTE,
@@ -122,6 +126,9 @@ def build_view(page: ft.Page) -> ft.View:
                 ],
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
+            ft.Text(""),
+            ft.Text("Вже використано: ", size=TEXT_SIZE),
+            used_block,
             ft.Text(""),
             elements.back_button(page),
             ft.Row(

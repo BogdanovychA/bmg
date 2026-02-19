@@ -20,7 +20,7 @@ class Event:
     city: str = ""
     message: str = ""
     used_cities: Cities = field(default_factory=set)
-    unused_cities: Cities | None = None
+    available_cities: Cities | None = None
     game_over: bool = False
 
 
@@ -98,7 +98,7 @@ def main(all_cities: CityStorage):
             response = yield Event(
                 city=city.upper(),
                 message=msg,
-                unused_cities=all_cities[last_letter],
+                available_cities=all_cities[last_letter],
                 used_cities=used_cities,
             )
 
@@ -113,7 +113,7 @@ def main(all_cities: CityStorage):
                 response = yield Event(
                     error=True,
                     message=msg,
-                    unused_cities=all_cities[last_letter],
+                    available_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
                 continue
@@ -125,34 +125,34 @@ def main(all_cities: CityStorage):
                 response = yield Event(
                     error=True,
                     message=msg,
-                    unused_cities=all_cities[last_letter],
+                    available_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
                 continue
             elif first_letter != last_letter:
-                msg = f'Місто «{city.upper()}» не починається на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])}). Назви інше'
+                msg = f'Місто «{city.title()}» не починається на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])}). Назви інше'
                 response = yield Event(
                     error=True,
                     message=msg,
-                    unused_cities=all_cities[last_letter],
+                    available_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
                 continue
             elif city in used_cities:
-                msg = f'Місто «{city.upper()}» вже було використано. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
+                msg = f'Місто «{city.title()}» вже було використано. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
                 response = yield Event(
                     error=True,
                     message=msg,
-                    unused_cities=all_cities[last_letter],
+                    available_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
                 continue
             elif first_letter not in all_cities or city not in all_cities[first_letter]:
-                msg = f'Місто «{city.upper()}» не існує. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
+                msg = f'Місто «{city.title()}» не існує. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
                 response = yield Event(
                     error=True,
                     message=msg,
-                    unused_cities=all_cities[last_letter],
+                    available_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
                 continue
