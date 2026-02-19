@@ -1,2 +1,2 @@
 type CityStorage = dict[str, set[str]]
-type UsedCities = set[str]
+type Cities = set[str]

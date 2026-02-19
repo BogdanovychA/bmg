@@ -4,7 +4,7 @@ import random
 from dataclasses import dataclass
 from enum import Enum
 
-from .types import CityStorage, UsedCities
+from .types import Cities, CityStorage
 
 
 class Move(Enum):
@@ -17,6 +17,8 @@ class Event:
     error: bool = False
     city: str = ""
     message: str = ""
+    used_cities: Cities = Cities
+    unused_cities: Cities | None = None
     game_over: bool = False
 
 
@@ -51,7 +53,7 @@ def main(cities: CityStorage):
         cities[first_letter].discard(city)
         used.add(city)
 
-    used: UsedCities = set()
+    used: Cities = set()
     all_letters = tuple(cities.keys())
 
     move = Move.AI
@@ -67,6 +69,7 @@ def main(cities: CityStorage):
                 return Event(
                     game_over=True,
                     message=f'Ви виграли! Більше немає міст на "{first_letter.upper()}"',
+                    used_cities=used,
                 )
 
             city = random.choice(list(cities[first_letter]))
@@ -80,11 +83,14 @@ def main(cities: CityStorage):
                     game_over=True,
                     city=city.upper(),
                     message=f'Ви програли! Більше немає міст на "{last_letter.upper()}"',
+                    used_cities=used,
                 )
 
             response = yield Event(
                 city=city.upper(),
                 message=f'Назви місто на літеру "{last_letter.upper()}"',
+                unused_cities=cities[last_letter],
+                used_cities=used,
             )
 
             move = Move.PLAYER
@@ -97,6 +103,8 @@ def main(cities: CityStorage):
                 response = yield Event(
                     error=True,
                     message=f'Ти нічого не ввів. Введи місто на літеру "{last_letter.upper()}"',
+                    unused_cities=cities[last_letter],
+                    used_cities=used,
                 )
                 continue
 
@@ -106,18 +114,24 @@ def main(cities: CityStorage):
                 response = yield Event(
                     error=True,
                     message=f'Місто "{city.upper()}" не починається на літеру "{last_letter.upper()}". Введи інше',
+                    unused_cities=cities[last_letter],
+                    used_cities=used,
                 )
                 continue
             elif city in used:
                 response = yield Event(
                     error=True,
                     message=f'Місто "{city.upper()}" вже було використано. Введи інше на літеру "{last_letter.upper()}"',
+                    unused_cities=cities[last_letter],
+                    used_cities=used,
                 )
                 continue
             elif first_letter not in cities or city not in cities[first_letter]:
                 response = yield Event(
                     error=True,
                     message=f'Місто "{city.upper()}" не існує. Введи інше на літеру "{last_letter.upper()}"',
+                    unused_cities=cities[last_letter],
+                    used_cities=used,
                 )
                 continue
 
@@ -137,6 +151,7 @@ if __name__ == "__main__":
 
     while True:
         try:
+            print(event)
             if event.city:
                 print(event.city)
             event = game.send(Input(city=input(f"{event.message}: ")))
