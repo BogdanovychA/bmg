@@ -12,8 +12,8 @@ from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
 from . import abstract, logic
 
 ROUTE = "/cities"
-TITLE = "Міста"
-SUB_TITLE = "Називай місто на останню літеру"
+TITLE = "Міста світу"
+SUB_TITLE = "Називай міста на останню літеру"
 
 
 class GameClient:
@@ -102,6 +102,7 @@ def build_view(page: ft.Page) -> ft.View:
             elements.app_bar(TITLE, page),
             ft.Text(""),
             sub_title,
+            ft.Text(""),
             city_block,
             ft.Text(""),
             ft.Row(
