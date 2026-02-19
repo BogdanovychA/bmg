@@ -21,3 +21,14 @@ class SelfData(GameData):
 
     def get_cities(self) -> CityStorage:
         return create_available(normalised(db.CITIES), normalised(blacklists.CITIES))
+
+
+class TestData(GameData):
+    """Для тестів локально"""
+
+    def get_cities(self) -> CityStorage:
+        return {
+            "к": {"київ"},
+            "в": {"вінниця"},
+            "я": {"ярослав"},
+        }

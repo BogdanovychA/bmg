@@ -6,6 +6,7 @@ import uuid
 import flet as ft
 from flet_storage import FletStorage
 
+from games.cities import cities
 from games.next_namber import next_number
 from games.tic_tac_toe import tic_tac_toe
 from routes import about, author, error404, root, settings
@@ -31,6 +32,10 @@ def build_main_view(page: ft.Page) -> ft.View:
             ft.Text(""),
             ft.Text("Обери гру, в яку хочеш зіграти:", size=TEXT_SIZE),
             ft.Text(""),
+            ft.Button(
+                cities.TITLE,
+                on_click=lambda: asyncio.create_task(page.push_route(cities.ROUTE)),
+            ),
             ft.Button(
                 next_number.TITLE,
                 on_click=lambda: asyncio.create_task(
@@ -73,6 +78,9 @@ async def main(page: ft.Page):
         page.views.clear()
         page.views.append(build_main_view(page))
         match page.route:
+
+            case cities.ROUTE:
+                page.views.append(cities.build_view(page))
             case next_number.ROUTE:
                 page.views.append(next_number.build_view(page))
             case tic_tac_toe.ROUTE:
