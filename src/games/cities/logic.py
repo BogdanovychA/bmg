@@ -66,9 +66,12 @@ def main(all_cities: CityStorage):
         if move == Move.AI:
 
             if not all_cities.get(first_letter):  # None або порожній set — обидва False
+                msg = (
+                    f'Ви виграли! Більше немає міст на літеру «{first_letter.upper()}»'
+                )
                 return Event(
                     game_over=True,
-                    message=f'Ви виграли! Більше немає міст на літеру «{first_letter.upper()}»',
+                    message=msg,
                     used_cities=used_cities,
                 )
 
@@ -77,16 +80,20 @@ def main(all_cities: CityStorage):
             last_letter = get_last_letter(city, all_letters)
 
             if not all_cities.get(last_letter):
+                msg = (
+                    f'Ви програли! Більше немає міст на літеру «{last_letter.upper()}»'
+                )
                 return Event(
                     game_over=True,
                     city=city.upper(),
-                    message=f'Ви програли! Більше немає міст на літеру «{last_letter.upper()}»',
+                    message=msg,
                     used_cities=used_cities,
                 )
 
+            msg = f'Назви місто на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
             response = yield Event(
                 city=city.upper(),
-                message=f'Назви місто на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})',
+                message=msg,
                 unused_cities=all_cities[last_letter],
                 used_cities=used_cities,
             )
@@ -98,9 +105,10 @@ def main(all_cities: CityStorage):
             city = response.city.lower()
 
             if not city:
+                msg = f'Ти нічого не ввів. Назви місто на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
                 response = yield Event(
                     error=True,
-                    message=f'Ти нічого не ввів. Назви місто на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})',
+                    message=msg,
                     unused_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
@@ -109,25 +117,28 @@ def main(all_cities: CityStorage):
             first_letter = city[0]
 
             if first_letter != last_letter:
+                msg = f'Місто «{city.upper()}» не починається на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])}). Назви інше'
                 response = yield Event(
                     error=True,
-                    message=f'Місто «{city.upper()}» не починається на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])}). Назви інше',
+                    message=msg,
                     unused_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
                 continue
             elif city in used_cities:
+                msg = f'Місто «{city.upper()}» вже було використано. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
                 response = yield Event(
                     error=True,
-                    message=f'Місто «{city.upper()}» вже було використано. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})',
+                    message=msg,
                     unused_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
                 continue
             elif first_letter not in all_cities or city not in all_cities[first_letter]:
+                msg = f'Місто «{city.upper()}» не існує. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
                 response = yield Event(
                     error=True,
-                    message=f'Місто «{city.upper()}» не існує. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})',
+                    message=msg,
                     unused_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
