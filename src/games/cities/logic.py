@@ -73,9 +73,7 @@ def main(all_cities: CityStorage):
                 )
 
             city = random.choice(list(all_cities[first_letter]))
-
             _remove_city()
-
             last_letter = get_last_letter(city, all_letters)
 
             if not all_cities.get(last_letter):
@@ -88,7 +86,7 @@ def main(all_cities: CityStorage):
 
             response = yield Event(
                 city=city.upper(),
-                message=f'Назви місто на літеру «{last_letter.upper()}»',
+                message=f'Назви місто на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})',
                 unused_cities=all_cities[last_letter],
                 used_cities=used_cities,
             )
@@ -102,7 +100,7 @@ def main(all_cities: CityStorage):
             if not city:
                 response = yield Event(
                     error=True,
-                    message=f'Ти нічого не ввів. Назви місто на літеру «{last_letter.upper()}»',
+                    message=f'Ти нічого не ввів. Назви місто на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})',
                     unused_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
@@ -113,7 +111,7 @@ def main(all_cities: CityStorage):
             if first_letter != last_letter:
                 response = yield Event(
                     error=True,
-                    message=f'Місто «{city.upper()}» не починається на літеру «{last_letter.upper()}». Назви інше',
+                    message=f'Місто «{city.upper()}» не починається на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])}). Назви інше',
                     unused_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
@@ -121,7 +119,7 @@ def main(all_cities: CityStorage):
             elif city in used_cities:
                 response = yield Event(
                     error=True,
-                    message=f'Місто «{city.upper()}» вже було використано. Назви інше на літеру «{last_letter.upper()}»',
+                    message=f'Місто «{city.upper()}» вже було використано. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})',
                     unused_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
@@ -129,14 +127,13 @@ def main(all_cities: CityStorage):
             elif first_letter not in all_cities or city not in all_cities[first_letter]:
                 response = yield Event(
                     error=True,
-                    message=f'Місто «{city.upper()}» не існує. Назви інше на літеру «{last_letter.upper()}»',
+                    message=f'Місто «{city.upper()}» не існує. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})',
                     unused_cities=all_cities[last_letter],
                     used_cities=used_cities,
                 )
                 continue
 
             _remove_city()
-
             first_letter = get_last_letter(city, all_letters)
             move = Move.AI
 
@@ -146,7 +143,6 @@ if __name__ == "__main__":
     from games.cities.abstract import SelfData
 
     game = main(all_cities=SelfData().get_cities())
-
     event = next(game)
 
     while True:
