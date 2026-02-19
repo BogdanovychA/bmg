@@ -12,13 +12,13 @@ dependencies = [
     "flet==0.80.5",
     "flet-storage==1.0.0",
     "httpx==0.28.1",
-    "flet-desktop==0.80.5",    # Видалити при створенні apk/aab
-    "flet-web==0.80.5",        # Видалити при створенні apk/aab
-    "flet-cli==0.80.5",        # Видалити при створенні apk/aab
 ]
 
 [dependency-groups]
 dev = [
+    "flet-desktop==0.80.5",    # Необхідно для роботи через web
+    "flet-web==0.80.5",        # Необхідно для роботи через web
+    "flet-cli==0.80.5",        # Необхідно для роботи через web
     "flet-desktop-light==0.80.5",
     "pre_commit>=4.5.1",
     "black>=26.1.0",
