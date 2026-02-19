@@ -4,7 +4,9 @@ import random
 from dataclasses import dataclass, field
 from enum import Enum
 
+from .database import blacklists
 from .types import Cities, CityStorage
+from .utils import normalised
 
 
 class Move(Enum):
@@ -55,6 +57,8 @@ def main(all_cities: CityStorage):
 
     used_cities: Cities = set()
     all_letters = tuple(all_cities.keys())
+
+    blacklist: CityStorage = normalised(blacklists.CITIES)
 
     move = Move.AI
     first_letter = random.choice(all_letters)  # Перша літера нового міста
@@ -116,7 +120,16 @@ def main(all_cities: CityStorage):
 
             first_letter = city[0]
 
-            if first_letter != last_letter:
+            if city in blacklist[first_letter]:
+                msg = f'Місто «{city}» належить до території росії чи білорусі. Назви інше на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
+                response = yield Event(
+                    error=True,
+                    message=msg,
+                    unused_cities=all_cities[last_letter],
+                    used_cities=used_cities,
+                )
+                continue
+            elif first_letter != last_letter:
                 msg = f'Місто «{city.upper()}» не починається на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])}). Назви інше'
                 response = yield Event(
                     error=True,
