@@ -20,6 +20,7 @@ def build_main_view(page: ft.Page) -> ft.View:
     page.title = root.TITLE
     return ft.View(
         route=root.ROUTE,
+        scroll=ft.ScrollMode.ADAPTIVE,
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(root.TITLE, page),
