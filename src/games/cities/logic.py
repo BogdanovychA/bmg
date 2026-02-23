@@ -4,9 +4,9 @@ import random
 from dataclasses import dataclass, field
 from enum import Enum
 
+from . import utils
 from .database import blacklists
 from .types import Cities, CityStorage
-from .utils import normalised
 
 
 class Move(Enum):
@@ -44,7 +44,12 @@ def get_last_letter(city: str, letters: tuple) -> str:
         return get_last_letter(city[:-1], letters)
 
 
-def main(all_cities: CityStorage):
+def main(
+    all_cities: CityStorage,
+    restore: bool = False,
+    used_cities: Cities | None = None,
+    last_ai_city: str | None = None,
+):
     """Основна функція-генератор"""
 
     def _remove_city():
@@ -55,15 +60,42 @@ def main(all_cities: CityStorage):
         all_cities[first_letter].discard(city)
         used_cities.add(city)
 
-    used_cities: Cities = set()
     all_letters = tuple(all_cities.keys())
-
-    blacklist: CityStorage = normalised(blacklists.CITIES)
-
-    move = Move.AI
-    first_letter = random.choice(all_letters)  # Перша літера нового міста
+    blacklist: CityStorage = utils.normalised(blacklists.CITIES)
     response = Input()
-    last_letter = ""  # Остання літера попереднього міста
+
+    if not restore:
+        move = Move.AI
+        city = ""  # Ініціалізація
+
+        used_cities = set()
+
+        first_letter = random.choice(all_letters)  # Перша літера нового міста
+        last_letter = ""  # Остання літера попереднього міста. Ініціалізація
+
+    else:
+        if not used_cities:
+            raise TypeError(
+                "Список використаних міст (used_cities) не може бути порожнім"
+            )
+        if not last_ai_city:
+            raise TypeError(
+                "Останнє місто, яке назвав AI (last_ai_city) не може бути порожнім"
+            )
+
+        move = Move.PLAYER
+        city = last_ai_city.lower().strip()
+
+        used_cities = {city.lower() for city in used_cities}  # Перестраховка :)
+
+        all_cities = utils.create_available(
+            all_cities, utils.create_used_dict(used_cities)
+        )
+
+        first_letter = ""  # Перша літера нового міста. Ініціалізація
+        last_letter = get_last_letter(
+            city, all_letters
+        )  # Остання літера попереднього міста.
 
     while True:
 
@@ -105,6 +137,17 @@ def main(all_cities: CityStorage):
             move = Move.PLAYER
 
         elif move == Move.PLAYER:
+
+            if restore:
+                restore = False
+
+                msg = f'Відновлення гри... Назви місто на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
+                response = yield Event(
+                    city=city.upper(),
+                    message=msg,
+                    available_cities=all_cities[last_letter],
+                    used_cities=used_cities,
+                )
 
             city = response.city.lower().strip()
 
@@ -166,7 +209,15 @@ if __name__ == "__main__":
 
     from games.cities.abstract import SelfData
 
-    game = main(all_cities=SelfData().get_cities())
+    # game = main(all_cities=SelfData().get_cities())
+
+    game = main(
+        all_cities=SelfData().get_cities(),
+        restore=True,
+        used_cities={"Київ", "варшава", "варшава", "київ", "Житомир"},
+        last_ai_city="Київ",
+    )
+
     event = next(game)
 
     while True:
