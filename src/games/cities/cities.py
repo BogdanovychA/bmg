@@ -38,6 +38,7 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
         cities_cache = await storage.get_or_default("cities_cache", None)
 
         if cities_cache is None:
+
             return GameClient(
                 game=logic.main(all_cities=abstract.SelfData().get_cities())
                 # game=logic.main(all_cities=abstract.TestData().get_cities())
@@ -53,6 +54,14 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
                 )
             )
 
+    async def _save_cache() -> None:
+
+        cities_cache = {
+            "used_cities": list(client.event.used_cities),
+            "last_ai_city": client.event.city,
+        }
+        await storage.set("cities_cache", cities_cache)
+
     async def _ok(event: ft.Event) -> None:
 
         if not client.game:
@@ -66,11 +75,7 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
 
             if not client.event.error:
 
-                cities_cache = {
-                    "used_cities": list(client.event.used_cities),
-                    "last_ai_city": client.event.city,
-                }
-                await storage.set("cities_cache", cities_cache)
+                await _save_cache()
 
                 city_block.value = client.event.city
                 message_block.value = client.event.message
@@ -122,6 +127,8 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
 
         client = await _create_client()
 
+        await _save_cache()
+
         sub_title.value = SUB_TITLE
         city_block.value = client.event.city
         message_block.value = client.event.message
@@ -133,6 +140,8 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
     page.title = TITLE
 
     client = await _create_client()
+
+    await _save_cache()
 
     sub_title = ft.Text(SUB_TITLE, size=TEXT_SIZE)
     city_block = ft.Text(client.event.city, size=TEXT_SIZE)
