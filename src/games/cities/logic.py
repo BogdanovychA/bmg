@@ -3,6 +3,7 @@
 import random
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Generator
 
 from . import utils
 from .database import blacklists
@@ -49,8 +50,18 @@ def main(
     restore: bool = False,
     used_cities: Cities | None = None,
     last_ai_city: str | None = None,
-):
-    """Основна функція-генератор"""
+) -> Generator[Event, Input, Event]:
+    """
+    Основна функція-генератор
+    Yields:
+        Event: Події гри (хід AI, запит на введення, помилки)
+
+    Receives:
+        Input: Відповідь гравця через send()
+
+    Returns:
+        Event: Фінальний стан гри (перемога/поразка)
+    """
 
     def _remove_city():
         """
@@ -105,11 +116,8 @@ def main(
                 msg = (
                     f'Ви виграли! Більше немає міст на літеру «{first_letter.upper()}»'
                 )
-                return Event(
-                    game_over=True,
-                    message=msg,
-                    used_cities=used_cities,
-                )
+                city = ""
+                break
 
             city = random.choice(list(all_cities[first_letter]))
             _remove_city()
@@ -119,12 +127,7 @@ def main(
                 msg = (
                     f'Ви програли! Більше немає міст на літеру «{last_letter.upper()}»'
                 )
-                return Event(
-                    game_over=True,
-                    city=city.upper(),
-                    message=msg,
-                    used_cities=used_cities,
-                )
+                break
 
             msg = f'Назви місто на літеру «{last_letter.upper()}» (лишилося {len(all_cities[last_letter])})'
             response = yield Event(
@@ -203,6 +206,13 @@ def main(
             _remove_city()
             first_letter = get_last_letter(city, all_letters)
             move = Move.AI
+
+    return Event(
+        game_over=True,
+        city=city.upper(),
+        message=msg,
+        used_cities=used_cities,
+    )
 
 
 if __name__ == "__main__":

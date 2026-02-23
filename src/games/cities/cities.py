@@ -20,7 +20,7 @@ SUB_TITLE = "Називай міста на останню літеру"
 class GameClient:
     def __init__(
         self,
-        game: Generator,
+        game: Generator[logic.Event, logic.Input, logic.Event],
     ) -> None:
         self.game = game
         self.event = next(game)
@@ -56,13 +56,25 @@ def build_view(page: ft.Page) -> ft.View:
             client.game = None
             client.event = e.value
 
-            if client.event.game_over:
-                sub_title.value = ""
-                city_block.value = (
-                    client.event.message
-                )  # Неявне використання city_block :)
-                message_block.value = "Перезапусти гру".upper()
-                answer_block.value = ""
+            if hasattr(client.event, 'game_over'):
+                if client.event.game_over:
+                    sub_title.value = ""
+                    city_block.value = (
+                        client.event.message
+                    )  # Неявне використання city_block :)
+                    message_block.value = "Перезапусти гру".upper()
+                    answer_block.value = ""
+                    used_block.value = make_used_string(client.event.used_cities)
+                else:
+                    pass  # На майбутнє :)
+
+            else:
+                msg = "StopIteration. Непередбачувана помилка"
+                sub_title.value = msg
+                city_block.value = msg
+                message_block.value = msg
+                answer_block.value = msg
+                used_block.value = msg
 
         event.page.update()
 
