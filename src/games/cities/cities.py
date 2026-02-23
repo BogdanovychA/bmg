@@ -64,14 +64,14 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
         try:
             client.event = client.game.send(logic.Input(city=answer_block.value))
 
-            cities_cache = {
-                "used_cities": list(client.event.used_cities),
-                "last_ai_city": client.event.city,
-            }
-
-            await storage.set("cities_cache", cities_cache)
-
             if not client.event.error:
+
+                cities_cache = {
+                    "used_cities": list(client.event.used_cities),
+                    "last_ai_city": client.event.city,
+                }
+                await storage.set("cities_cache", cities_cache)
+
                 city_block.value = client.event.city
                 message_block.value = client.event.message
                 answer_block.value = ""
@@ -80,7 +80,7 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
                 message_block.value = client.event.message
 
         except StopIteration as e:
-            await storage.set("cities_cache", None)
+            await storage.remove("cities_cache")
             client.game = None
             client.event = e.value
 
@@ -118,7 +118,7 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
 
         nonlocal client
 
-        await storage.set("cities_cache", None)
+        await storage.remove("cities_cache")
 
         client = await _create_client()
 
