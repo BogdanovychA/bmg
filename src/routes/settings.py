@@ -21,6 +21,9 @@ ROUTE = BASE_URL + "/settings"
 def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
     """Екран налаштувань"""
 
+    async def _clear_cache(event: ft.Event) -> None:
+        await storage.clear()
+
     async def _switch(event: ft.Event) -> None:
         """Обробник перемикача вкл/викл будильника"""
 
@@ -70,6 +73,10 @@ def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
             game_mode_selector,
             ft.Text(""),
             text,
+            ft.Text(""),
+            ft.Button(
+                "Видалити кеш", icon=ft.Icons.DELETE_OUTLINE, on_click=_clear_cache
+            ),
             ft.Text(""),
             elements.back_button(page),
             ft.Row(
