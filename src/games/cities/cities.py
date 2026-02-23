@@ -34,12 +34,26 @@ class GameClient:
 async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
 
     async def _create_client() -> GameClient:
-        return GameClient(
-            game=logic.main(all_cities=abstract.SelfData().get_cities())
-            # game=logic.main(all_cities=abstract.TestData().get_cities())
-        )
 
-    def _ok(event: ft.Event) -> None:
+        cities_cache = await storage.get_or_default("cities_cache", None)
+
+        if cities_cache is None:
+            return GameClient(
+                game=logic.main(all_cities=abstract.SelfData().get_cities())
+                # game=logic.main(all_cities=abstract.TestData().get_cities())
+            )
+
+        else:
+            return GameClient(
+                game=logic.main(
+                    all_cities=abstract.SelfData().get_cities(),
+                    # all_cities=abstract.TestData().get_cities(),
+                    restore=True,
+                    **cities_cache,
+                )
+            )
+
+    async def _ok(event: ft.Event) -> None:
 
         if not client.game:
             return
@@ -49,6 +63,14 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
 
         try:
             client.event = client.game.send(logic.Input(city=answer_block.value))
+
+            cities_cache = {
+                "used_cities": list(client.event.used_cities),
+                "last_ai_city": client.event.city,
+            }
+
+            await storage.set("cities_cache", cities_cache)
+
             if not client.event.error:
                 city_block.value = client.event.city
                 message_block.value = client.event.message
@@ -58,6 +80,7 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
                 message_block.value = client.event.message
 
         except StopIteration as e:
+            await storage.set("cities_cache", None)
             client.game = None
             client.event = e.value
 
@@ -94,6 +117,9 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
     async def _rerun(event: ft.Event) -> None:
 
         nonlocal client
+
+        await storage.set("cities_cache", None)
+
         client = await _create_client()
 
         sub_title.value = SUB_TITLE
