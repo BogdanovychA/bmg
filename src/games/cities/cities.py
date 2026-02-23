@@ -1,7 +1,12 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
+
 import random
-from typing import Generator
+from typing import TYPE_CHECKING, Generator
+
+if TYPE_CHECKING:
+    from flet_storage import FletStorage
 
 import flet as ft
 
@@ -26,9 +31,9 @@ class GameClient:
         self.event = next(game)
 
 
-def build_view(page: ft.Page) -> ft.View:
+async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
 
-    def _create_client() -> GameClient:
+    async def _create_client() -> GameClient:
         return GameClient(
             game=logic.main(all_cities=abstract.SelfData().get_cities())
             # game=logic.main(all_cities=abstract.TestData().get_cities())
@@ -86,10 +91,10 @@ def build_view(page: ft.Page) -> ft.View:
         answer_block.value = random.choice(list(client.event.available_cities)).title()
         event.page.update()
 
-    def _rerun(event: ft.Event) -> None:
+    async def _rerun(event: ft.Event) -> None:
 
         nonlocal client
-        client = _create_client()
+        client = await _create_client()
 
         sub_title.value = SUB_TITLE
         city_block.value = client.event.city
@@ -101,7 +106,7 @@ def build_view(page: ft.Page) -> ft.View:
 
     page.title = TITLE
 
-    client = _create_client()
+    client = await _create_client()
 
     sub_title = ft.Text(SUB_TITLE, size=TEXT_SIZE)
     city_block = ft.Text(client.event.city, size=TEXT_SIZE)
