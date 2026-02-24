@@ -57,7 +57,7 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
     async def _save_cache() -> None:
 
         cities_cache = {
-            "used_cities": list(client.event.used_cities),
+            "used_cities": client.event.used_cities,
             "last_ai_city": client.event.city,
         }
         await storage.set("cities_cache", cities_cache)
