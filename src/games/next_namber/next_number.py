@@ -62,11 +62,11 @@ def build_view(page: ft.Page) -> ft.View:
         label_style=ft.TextStyle(size=TEXT_SIZE),
         value="random",
         options=[
-            ft.DropdownOption(key=Difficulty.EASY.value, text="Низька"),
-            ft.DropdownOption(key=Difficulty.MEDIUM.value, text="Середня"),
-            ft.DropdownOption(key=Difficulty.HARD.value, text="Висока"),
-            ft.DropdownOption(key=Difficulty.EXPERT.value, text="Надвисока"),
-            ft.DropdownOption(key=Difficulty.RANDOM.value, text="Випадкова"),
+            ft.DropdownOption(key=Difficulty.EASY, text="Низька"),
+            ft.DropdownOption(key=Difficulty.MEDIUM, text="Середня"),
+            ft.DropdownOption(key=Difficulty.HARD, text="Висока"),
+            ft.DropdownOption(key=Difficulty.EXPERT, text="Надвисока"),
+            ft.DropdownOption(key=Difficulty.RANDOM, text="Випадкова"),
         ],
         on_select=_rerun,
     )
