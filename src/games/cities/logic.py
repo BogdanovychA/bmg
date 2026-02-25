@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import random
-from dataclasses import dataclass, field
 from enum import Enum
 from typing import Generator
+
+from pydantic import BaseModel, Field
 
 from . import utils
 from .database import blacklists
@@ -15,18 +16,16 @@ class Move(Enum):
     AI = "ai"
 
 
-@dataclass
-class Event:
+class Event(BaseModel):
     error: bool = False
     city: str = ""
     message: str = ""
-    used_cities: Cities = field(default_factory=set)
+    used_cities: Cities = Field(default_factory=set)
     available_cities: Cities | None = None
     game_over: bool = False
 
 
-@dataclass
-class Input:
+class Input(BaseModel):
     city: str = ""
 
 
