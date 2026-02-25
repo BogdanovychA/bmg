@@ -22,10 +22,10 @@ def check_winner(board: list[str]) -> str | None:
 
     for combo in WIN_POSITIONS:
         a, b, c = combo
-        if board[a] == board[b] == board[c] and board[a] != Symbol.EMPTY.value:
+        if board[a] == board[b] == board[c] and board[a] != Symbol.EMPTY:
             return board[a]
-    if Symbol.EMPTY.value not in board:
-        return Symbol.DRAW.value
+    if Symbol.EMPTY not in board:
+        return Symbol.DRAW
     return None
 
 
@@ -43,25 +43,25 @@ def minimax(
         return 1
     if winner == min_player_symbol:
         return -1
-    if winner == Symbol.DRAW.value:
+    if winner == Symbol.DRAW:
         return 0
 
     if is_max_turn:
         best_score = -math.inf
         for i in range(9):
-            if board[i] == Symbol.EMPTY.value:
+            if board[i] == Symbol.EMPTY:
                 board[i] = max_player_symbol
                 score = minimax(board, False, max_player_symbol, min_player_symbol)
-                board[i] = Symbol.EMPTY.value
+                board[i] = Symbol.EMPTY
                 best_score = max(best_score, score)
         return best_score
     else:
         best_score = math.inf
         for i in range(9):
-            if board[i] == Symbol.EMPTY.value:
+            if board[i] == Symbol.EMPTY:
                 board[i] = min_player_symbol
                 score = minimax(board, True, max_player_symbol, min_player_symbol)
-                board[i] = Symbol.EMPTY.value
+                board[i] = Symbol.EMPTY
                 best_score = min(best_score, score)
         return best_score
 
@@ -72,10 +72,10 @@ def best_move(board: list, max_player_symbol: str, min_player_symbol: str) -> in
     move = None
 
     for i in range(9):
-        if board[i] == Symbol.EMPTY.value:
+        if board[i] == Symbol.EMPTY:
             board[i] = max_player_symbol
             score = minimax(board, False, max_player_symbol, min_player_symbol)
-            board[i] = Symbol.EMPTY.value
+            board[i] = Symbol.EMPTY
             if score > best_score:
                 best_score = score
                 move = i

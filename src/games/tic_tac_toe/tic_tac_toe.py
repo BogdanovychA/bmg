@@ -22,7 +22,7 @@ BOARD_BG_COLOR = ft.Colors.ON_SURFACE_VARIANT
 CELL_SIZE = 50
 CELL_RADIUS = 10
 
-EMPTY_BOARD = [Symbol.EMPTY.value] * 9
+EMPTY_BOARD = [Symbol.EMPTY] * 9
 
 
 def build_view(page: ft.Page) -> ft.View:
@@ -31,7 +31,7 @@ def build_view(page: ft.Page) -> ft.View:
     def _set_ai() -> str:
         """Визначення символу, за який грає ШІ -- протилежний від людини"""
 
-        return Symbol.O.value if player == Symbol.X.value else Symbol.X.value
+        return Symbol.O if player == Symbol.X else Symbol.X
 
     def _check_game_status() -> None:
         """Перевірка чи є переможець на дошці"""
@@ -44,10 +44,10 @@ def build_view(page: ft.Page) -> ft.View:
         try:  # На випадок, якщо працюємо по API
             winner = client.check_winner(board)
             match winner:
-                case Symbol.X.value | Symbol.O.value:
+                case Symbol.X | Symbol.O:
                     message_block.value = f"Перемога {winner}"
                     game_finished = True
-                case Symbol.DRAW.value:
+                case Symbol.DRAW:
                     message_block.value = "Нічия"
                     game_finished = True
 
@@ -99,7 +99,7 @@ def build_view(page: ft.Page) -> ft.View:
             _ai_move(player)
         else:  # Звичайний клік по дошці
             # Якщо натиснули по заповненому полю дошки -- ігноруємо
-            if board[event.control.data] != Symbol.EMPTY.value:
+            if board[event.control.data] != Symbol.EMPTY:
                 return
             _move_player(event.control.data, player)
 
@@ -126,11 +126,11 @@ def build_view(page: ft.Page) -> ft.View:
         """Фабрика об'єктів іконок - залежно від використаного символу"""
 
         match icon:
-            case Symbol.X.value:
+            case Symbol.X:
                 return ft.Icon(ft.Icons.CLOSE, color=X_COLOR)
-            case Symbol.O.value:
+            case Symbol.O:
                 return ft.Icon(ft.Icons.CIRCLE_OUTLINED, color=O_COLOR)
-            case Symbol.EMPTY.value | _:
+            case Symbol.EMPTY | _:
                 return None
 
     def _cell(content: ft.Icon, data: int) -> ft.Container:
@@ -159,18 +159,18 @@ def build_view(page: ft.Page) -> ft.View:
         ]
 
     symbol_selector = ft.SegmentedButton(
-        selected=[Symbol.X.value],
+        selected=[Symbol.X],
         allow_empty_selection=False,
         allow_multiple_selection=False,
         show_selected_icon=False,
         segments=[
             ft.Segment(
-                value=Symbol.X.value,
-                label=_icon(Symbol.X.value),
+                value=Symbol.X,
+                label=_icon(Symbol.X),
             ),
             ft.Segment(
-                value=Symbol.O.value,
-                label=_icon(Symbol.O.value),
+                value=Symbol.O,
+                label=_icon(Symbol.O),
             ),
         ],
         on_change=_switch,
@@ -189,7 +189,7 @@ def build_view(page: ft.Page) -> ft.View:
 
         return abstract.APIData()
 
-    def _init(player_symbol: str) -> None:
+    def _init(player_symbol: Symbol) -> None:
         """Ініціалізація стану гри або його зміна при перемиканні"""
         nonlocal player, ai, board, game_finished
         board = EMPTY_BOARD.copy()
@@ -198,7 +198,7 @@ def build_view(page: ft.Page) -> ft.View:
         game_finished = False
         message_block.value = "Зроби свій хід:"
 
-        if player == Symbol.O.value:  # Якщо ШІ грає за X -- одразу робимо хід
+        if player == Symbol.O:  # Якщо ШІ грає за X -- одразу робимо хід
             _ai_move(ai)
 
     board = []
@@ -209,7 +209,7 @@ def build_view(page: ft.Page) -> ft.View:
 
     client = _create_client()
 
-    _init(Symbol.X.value)
+    _init(Symbol.X)
 
     board_layout = ft.Column(
         controls=_render_board(),
