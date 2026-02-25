@@ -115,7 +115,7 @@ async def main(page: ft.Page):
             page.session.store.set(name, value)
 
         await __init_obj("client_id", str(uuid.uuid4()))
-        await __init_obj("game_mode", GameMode.OFFLINE.value)
+        await __init_obj("game_mode", GameMode.OFFLINE)
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop

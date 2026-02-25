@@ -184,7 +184,7 @@ def build_view(page: ft.Page) -> ft.View:
 
         game_mode = page.session.store.get("game_mode")
 
-        if game_mode == GameMode.OFFLINE.value:
+        if game_mode == GameMode.OFFLINE:
             return abstract.SelfData()
 
         return abstract.APIData()

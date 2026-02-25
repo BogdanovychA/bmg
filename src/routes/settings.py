@@ -32,7 +32,7 @@ def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
         page.session.store.set("game_mode", value)
         await storage.set("game_mode", value)
 
-        if value == GameMode.OFFLINE.value:
+        if value == GameMode.OFFLINE:
             text.value = "Локальний режим роботи (рекомендовано)"
         else:
             text.value = "Робота по API (не рекомендується)"
@@ -46,13 +46,13 @@ def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
         show_selected_icon=False,
         segments=[
             ft.Segment(
-                value=GameMode.OFFLINE.value,
-                label=ft.Text(GameMode.OFFLINE.value),
+                value=GameMode.OFFLINE,
+                label=ft.Text(GameMode.OFFLINE),
                 icon=ft.Icons.STAY_CURRENT_PORTRAIT,
             ),
             ft.Segment(
-                value=GameMode.ONLINE.value,
-                label=ft.Text(GameMode.ONLINE.value),
+                value=GameMode.ONLINE,
+                label=ft.Text(GameMode.ONLINE),
                 icon=ft.Icons.CLOUD_QUEUE,
             ),
         ],

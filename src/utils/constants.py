@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from enum import Enum
+from enum import StrEnum
 
 
-class Difficulty(Enum):
+class Difficulty(StrEnum):
     EASY = "easy"
     MEDIUM = "medium"
     HARD = "hard"
@@ -11,6 +11,6 @@ class Difficulty(Enum):
     RANDOM = "random"
 
 
-class GameMode(Enum):
+class GameMode(StrEnum):
     ONLINE = "online"
     OFFLINE = "offline"
