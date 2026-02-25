@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import random
-from enum import Enum
+from enum import StrEnum
 from typing import Generator
 
 from pydantic import BaseModel, Field
@@ -11,7 +11,7 @@ from .database import blacklists
 from .types import Cities, CityStorage
 
 
-class Move(Enum):
+class Move(StrEnum):
     PLAYER = "player"
     AI = "ai"
 
