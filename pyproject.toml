@@ -1,6 +1,6 @@
 [project]
 name = "minigames"
-version = "1.2.5"
+version = "1.2.6"
 description = "Bogdanovych's MiniGames"
 readme = "README.md"
 requires-python = ">=3.14"
@@ -9,7 +9,7 @@ authors = [
 ]
 
 dependencies = [
-    "flet==0.80.5",
+    "flet==0.81.0",
     "flet-storage==1.1.0",
     "httpx==0.28.1",
     "pydentic==0.0.1.dev3",
@@ -17,10 +17,10 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "flet-desktop==0.80.5",    # Необхідно для роботи через web
-    "flet-web==0.80.5",        # Необхідно для роботи через web
-    "flet-cli==0.80.5",        # Необхідно для роботи через web
-    "flet-desktop-light==0.80.5",
+    "flet-desktop==0.81.0",    # Необхідно для роботи через web
+    "flet-web==0.81.0",        # Необхідно для роботи через web
+    "flet-cli==0.81.0",        # Необхідно для роботи через web
+    "flet-desktop-light==0.81.0",
     "pre_commit==4.5.1",
     "black==26.1.0",
     "isort==8.0.0",
