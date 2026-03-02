@@ -283,14 +283,14 @@ wheels = [
 
 [[package]]
 name = "flet-storage"
-version = "1.1.0"
+version = "1.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "flet" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f2/45/815b512b114f3d1f3b4fc363fb7f0b9f8085d35dada8d2b8d408577d9dcc/flet_storage-1.1.0.tar.gz", hash = "sha256:127e929aeae513fecffb2c96337b23db372d97292131ba470edbd23a1650c286", size = 7266, upload-time = "2026-02-24T10:43:35.43Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/69/e8/9dcbb7c0d525e8ea21a20a9b5b7e82f292d38526fbba5152eeaf90bf2e27/flet_storage-1.1.1.tar.gz", hash = "sha256:3bd8b9718f5cc88e16101068cc0ca3db5d9d125fb391f66fbbc1b94c231b6b77", size = 7298, upload-time = "2026-03-02T09:51:50.877Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/dd/f0/801b6387c736ca56d43c51ad261720dd3b84dc1464f9d7d6d2fab5b455b3/flet_storage-1.1.0-py3-none-any.whl", hash = "sha256:8f8e3f0df09c3cfcaf12e347b3bfe89c95dc0178f9f40720d3f0b2f59e9214e8", size = 7637, upload-time = "2026-02-24T10:43:34.28Z" },
+    { url = "https://files.pythonhosted.org/packages/ae/62/cfeecf959dc172bf59f5c9a51a6e8cebdd4ccc61615dc41951abce66f693/flet_storage-1.1.1-py3-none-any.whl", hash = "sha256:97eb88dbbda8f00e9c4c0984d2127ad587dd527c1215e4a513482bb1051277d7", size = 7705, upload-time = "2026-03-02T09:51:49.58Z" },
 ]
 
 [[package]]
@@ -379,11 +379,11 @@ wheels = [
 
 [[package]]
 name = "isort"
-version = "8.0.0"
+version = "8.0.1"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/bf/e3/e72b0b3a85f24cf5fc2cd8e92b996592798f896024c5cdf3709232e6e377/isort-8.0.0.tar.gz", hash = "sha256:fddea59202f231e170e52e71e3510b99c373b6e571b55d9c7b31b679c0fed47c", size = 769482, upload-time = "2026-02-19T16:31:59.716Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ef/7c/ec4ab396d31b3b395e2e999c8f46dec78c5e29209fac49d1f4dace04041d/isort-8.0.1.tar.gz", hash = "sha256:171ac4ff559cdc060bcfff550bc8404a486fee0caab245679c2abe7cb253c78d", size = 769592, upload-time = "2026-02-28T10:08:20.685Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/74/ea/cf3aad99dd12c026e2d6835d559efb6fc50ccfd5b46d42d5fec2608b116a/isort-8.0.0-py3-none-any.whl", hash = "sha256:184916a933041c7cf718787f7e52064f3c06272aff69a5cb4dc46497bd8911d9", size = 89715, upload-time = "2026-02-19T16:31:57.745Z" },
+    { url = "https://files.pythonhosted.org/packages/3e/95/c7c34aa53c16353c56d0b802fba48d5f5caa2cdee7958acbcb795c830416/isort-8.0.1-py3-none-any.whl", hash = "sha256:28b89bc70f751b559aeca209e6120393d43fbe2490de0559662be7a9787e3d75", size = 89733, upload-time = "2026-02-28T10:08:19.466Z" },
 ]
 
 [[package]]
@@ -451,7 +451,7 @@ wheels = [
 
 [[package]]
 name = "minigames"
-version = "1.2.6"
+version = "1.2.7"
 source = { editable = "." }
 dependencies = [
     { name = "flet" },
@@ -474,7 +474,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "flet", specifier = "==0.81.0" },
-    { name = "flet-storage", specifier = "==1.1.0" },
+    { name = "flet-storage", specifier = ">=1.1.0" },
     { name = "httpx", specifier = "==0.28.1" },
     { name = "pydentic", specifier = "==0.0.1.dev3" },
 ]
@@ -486,7 +486,7 @@ dev = [
     { name = "flet-desktop", specifier = "==0.81.0" },
     { name = "flet-desktop-light", specifier = "==0.81.0" },
     { name = "flet-web", specifier = "==0.81.0" },
-    { name = "isort", specifier = "==8.0.0" },
+    { name = "isort", specifier = "==8.0.1" },
     { name = "pre-commit", specifier = "==4.5.1" },
 ]
 
