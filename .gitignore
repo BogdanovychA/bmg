@@ -1,8 +1,13 @@
 # IDEs
 .idea/
 .vscode/
+
 # Virtual environments
 .venv*/
+
+# Environmental variables
+src/assets/.env
+
 # Python-generated files
 **/__pycache__/
 **/*.pyc
@@ -10,12 +15,13 @@
 dist/
 wheels/
 *.egg-info
+
 # Tests
 htmlcov/
 .pytest_cache/
 .coverage
+
 # Project
-src/utils/secret.py
 bin/
 src/temp/
 build*/

@@ -4,11 +4,12 @@ from abc import ABC, abstractmethod
 
 import httpx
 
-from utils.config import API_URL
 from utils.exceptions import GameAPIError
 
 from . import logic
 from .constants import Symbol
+
+API_URL = "https://karatel.ua/api"
 
 
 class GameData(ABC):

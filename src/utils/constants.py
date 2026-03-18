@@ -14,3 +14,7 @@ class Difficulty(StrEnum):
 class GameMode(StrEnum):
     ONLINE = "online"
     OFFLINE = "offline"
+
+
+NUMBER_42 = 42
+TEXT_42 = "Найголовніше питання життя, Всесвіту та всього сущого"

@@ -2,16 +2,16 @@
 
 import flet as ft
 
+from config import app, style
 from routes import about, author
 from utils import elements
-from utils.config import NUMBER_42, TEXT_SIZE
-from utils.constants import GameMode
+from utils.constants import NUMBER_42, GameMode
 from utils.exceptions import GameAPIError
 
 from . import abstract
 from .constants import Symbol
 
-ROUTE = "/tic-tac-toe"
+ROUTE = app.settings.base_url + "/tic-tac-toe"
 TITLE = "Хрестики-нулики"
 SUB_TITLE = "Обери за кого грати"
 
@@ -205,7 +205,7 @@ def build_view(page: ft.Page) -> ft.View:
     player = ""
     ai = ""
     game_finished = False
-    message_block = ft.Text(size=TEXT_SIZE)
+    message_block = ft.Text(size=style.settings.text_size)
 
     client = _create_client()
 
@@ -224,7 +224,7 @@ def build_view(page: ft.Page) -> ft.View:
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(TITLE, page),
-            ft.Text(SUB_TITLE, size=TEXT_SIZE),
+            ft.Text(SUB_TITLE, size=style.settings.text_size),
             symbol_selector,
             ft.Text(""),
             message_block,

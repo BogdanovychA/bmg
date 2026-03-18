@@ -10,14 +10,14 @@ if TYPE_CHECKING:
 
 import flet as ft
 
+from config import app, style
 from routes import about, author
 from utils import elements
-from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
 
 from . import abstract, logic
 from .utils import make_used_string
 
-ROUTE = "/cities"
+ROUTE = app.settings.base_url + "/cities"
 TITLE = "Міста світу"
 SUB_TITLE = "Називай міста на останню літеру"
 
@@ -143,11 +143,14 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
 
     await _save_cache()
 
-    sub_title = ft.Text(SUB_TITLE, size=TEXT_SIZE)
-    city_block = ft.Text(client.event.city, size=TEXT_SIZE)
-    message_block = ft.Text(client.event.message, size=TEXT_SIZE)
+    sub_title = ft.Text(SUB_TITLE, size=style.settings.text_size)
+    city_block = ft.Text(client.event.city, size=style.settings.text_size)
+    message_block = ft.Text(client.event.message, size=style.settings.text_size)
     answer_block = ft.TextField(
-        value="", width=250, bgcolor=FORM_BG_COLOR, border_color=FORM_BORDER_COLOR
+        value="",
+        width=250,
+        bgcolor=style.settings.form_bg_color,
+        border_color=style.settings.form_border_color,
     )
     used_block = ft.Text(make_used_string(client.event.used_cities))
 
@@ -180,7 +183,7 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
                 alignment=ft.MainAxisAlignment.CENTER,
             ),
             ft.Text(""),
-            ft.Text("Вже використано: ", size=TEXT_SIZE),
+            ft.Text("Вже використано: ", size=style.settings.text_size),
             used_block,
             ft.Text(""),
             elements.back_button(page),

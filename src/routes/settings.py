@@ -6,16 +6,16 @@ from typing import TYPE_CHECKING
 
 import flet as ft
 
+from config import app, style
 from routes import about, author
 from utils import elements
-from utils.config import BASE_URL, TEXT_SIZE
 from utils.constants import GameMode
 
 if TYPE_CHECKING:
     from flet_storage import FletStorage
 
 TITLE = "Налаштування"
-ROUTE = BASE_URL + "/settings"
+ROUTE = app.settings.base_url + "/settings"
 
 
 def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
@@ -59,7 +59,7 @@ def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
         on_change=_switch,
     )
 
-    text = ft.Text("", size=TEXT_SIZE)
+    text = ft.Text("", size=style.settings.text_size)
 
     return ft.View(
         route=ROUTE,
@@ -68,7 +68,7 @@ def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
         controls=[
             elements.app_bar(TITLE, page),
             ft.Text(""),
-            ft.Text("Режим роботи застосунку", size=TEXT_SIZE),
+            ft.Text("Режим роботи застосунку", size=style.settings.text_size),
             ft.Text(""),
             game_mode_selector,
             ft.Text(""),

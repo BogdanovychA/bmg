@@ -4,8 +4,8 @@ import asyncio
 
 import flet as ft
 
+from config import style
 from routes import root, settings
-from utils.config import LINK_COLOR, TITLE_SIZE
 
 
 def back_button(page) -> ft.Button:
@@ -18,7 +18,7 @@ def back_button(page) -> ft.Button:
 
 def app_bar(title, page) -> ft.AppBar:
     return ft.AppBar(
-        title=ft.Text(title, size=TITLE_SIZE, weight=ft.FontWeight.BOLD),
+        title=ft.Text(title, size=style.settings.title_size, weight=ft.FontWeight.BOLD),
         center_title=True,
         actions=[
             ft.IconButton(
@@ -31,8 +31,12 @@ def app_bar(title, page) -> ft.AppBar:
 
 
 def link(text: str, url: str) -> ft.TextSpan:
-    style_normal = ft.TextStyle(decoration=ft.TextDecoration.NONE, color=LINK_COLOR)
-    style_hover = ft.TextStyle(decoration=ft.TextDecoration.UNDERLINE, color=LINK_COLOR)
+    style_normal = ft.TextStyle(
+        decoration=ft.TextDecoration.NONE, color=style.settings.link_color
+    )
+    style_hover = ft.TextStyle(
+        decoration=ft.TextDecoration.UNDERLINE, color=style.settings.link_color
+    )
 
     def _handler(event: ft.Event) -> None:
         span.style = style_hover if event.name == "enter" else style_normal

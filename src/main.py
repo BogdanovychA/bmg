@@ -6,13 +6,13 @@ import uuid
 import flet as ft
 from flet_storage import FletStorage
 
+from config import app, style
 from games.cities import cities
 from games.next_namber import next_number
 from games.tic_tac_toe import tic_tac_toe
 from routes import about, author, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
-from utils.config import APP_NAME, TEXT_SIZE
 from utils.constants import GameMode
 
 
@@ -31,7 +31,7 @@ def build_main_view(page: ft.Page) -> ft.View:
                 height=200,
             ),
             ft.Text(""),
-            ft.Text("Обери гру, в яку хочеш зіграти:", size=TEXT_SIZE),
+            ft.Text("Обери гру, в яку хочеш зіграти:", size=style.settings.text_size),
             ft.Text(""),
             ft.Button(
                 cities.TITLE,
@@ -120,7 +120,7 @@ async def main(page: ft.Page):
     page.on_route_change = route_change
     page.on_view_pop = view_pop
 
-    storage = FletStorage(APP_NAME)
+    storage = FletStorage(app.settings.name)
 
     await _init()
 

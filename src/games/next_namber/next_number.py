@@ -2,15 +2,15 @@
 
 import flet as ft
 
+from config import app, style
 from routes import about, author
 from utils import elements
-from utils.config import FORM_BG_COLOR, FORM_BORDER_COLOR, TEXT_SIZE
 from utils.constants import Difficulty, GameMode
 from utils.utils import is_int
 
 from . import abstract
 
-ROUTE = "/next-number"
+ROUTE = app.settings.base_url + "/next-number"
 TITLE = "Вгадай наступне число"
 SUB_TITLE = "Визнач, що це за послідовність\nта яке число має бути наступним"
 
@@ -59,7 +59,7 @@ def build_view(page: ft.Page) -> ft.View:
 
     difficulty_block = ft.Dropdown(
         label="Складність",
-        label_style=ft.TextStyle(size=TEXT_SIZE),
+        label_style=ft.TextStyle(size=style.settings.text_size),
         value="random",
         options=[
             ft.DropdownOption(key=Difficulty.EASY, text="Низька"),
@@ -75,11 +75,14 @@ def build_view(page: ft.Page) -> ft.View:
 
     target_value = None
     hint = ""
-    quest_block = ft.Text("", size=TEXT_SIZE)
+    quest_block = ft.Text("", size=style.settings.text_size)
     answer_block = ft.TextField(
-        value="", width=150, bgcolor=FORM_BG_COLOR, border_color=FORM_BORDER_COLOR
+        value="",
+        width=150,
+        bgcolor=style.settings.form_bg_color,
+        border_color=style.settings.form_border_color,
     )
-    message_block = ft.Text("", size=TEXT_SIZE)
+    message_block = ft.Text("", size=style.settings.text_size)
 
     client = _create_client()
 
@@ -92,7 +95,7 @@ def build_view(page: ft.Page) -> ft.View:
         controls=[
             elements.app_bar(TITLE, page),
             ft.Text(""),
-            ft.Text(SUB_TITLE, size=TEXT_SIZE),
+            ft.Text(SUB_TITLE, size=style.settings.text_size),
             quest_block,
             message_block,
             ft.Text(""),

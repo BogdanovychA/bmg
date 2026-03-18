@@ -4,12 +4,12 @@ import asyncio
 
 import flet as ft
 
+from config import app, style
 from routes import about
 from utils import elements
-from utils.config import BASE_URL, TEXT_SIZE
 
 TITLE = "Про автора"
-ROUTE = BASE_URL + "/author"
+ROUTE = app.settings.base_url + "/author"
 
 
 def button(page) -> ft.Button:
@@ -27,7 +27,7 @@ def build_view(page: ft.Page) -> ft.View:
         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
         controls=[
             elements.app_bar(TITLE, page),
-            ft.Text("Андрій БОГДАНОВИЧ", size=TEXT_SIZE),
+            ft.Text("Андрій БОГДАНОВИЧ", size=style.settings.text_size),
             ft.Text(""),
             ft.Image(
                 src="/images/bogdanovych-900x900.jpg",  # Посилання на картинку
@@ -36,7 +36,7 @@ def build_view(page: ft.Page) -> ft.View:
             ),
             ft.Text(""),
             ft.Text(
-                size=TEXT_SIZE,
+                size=style.settings.text_size,
                 spans=[
                     elements.link("Домашня сторінка", "https://www.bogdanovych.org"),
                     ft.TextSpan("\n"),
