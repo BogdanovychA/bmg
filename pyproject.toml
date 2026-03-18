@@ -9,7 +9,7 @@ authors = [
 ]
 
 dependencies = [
-    "flet==0.81.0",
+    "flet==0.82.2",
     "flet-storage>=1.1.0",
     "httpx==0.28.1",
     "pydentic==0.0.1.dev3",
@@ -17,12 +17,12 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "flet-desktop==0.81.0",    # Необхідно для роботи через web
-    "flet-web==0.81.0",        # Необхідно для роботи через web
-    "flet-cli==0.81.0",        # Необхідно для роботи через web
-    "flet-desktop-light==0.81.0",
+    "flet-desktop==0.82.2",    # Необхідно для роботи через web
+    "flet-web==0.82.2",        # Необхідно для роботи через web
+    "flet-cli==0.82.2",        # Необхідно для роботи через web
+    "flet-desktop-light==0.82.2",
     "pre_commit==4.5.1",
-    "black==26.1.0",
+    "black==26.3.1",
     "isort==8.0.1",
 ]
 
