@@ -14,7 +14,7 @@ class Settings(BaseModel):
         return Path(os.environ.get("FLET_ASSETS_DIR", default_assets_dir)).resolve()
 
     name: str = "Mini_Games"
-    version: str = "1.2.8"
+    version: str = "1.2.9"
 
     base_url: str = ""
     assets_dir: Path = get_asset_dir()
