@@ -32,4 +32,4 @@ uv run pre-commit install
 # опційно: uv run pre-commit run --all-files
 
 # 4. Запустіть застосунок
-uv run flet run     # опційно з ключем  --web 
+uv run flet run     # опційно з ключем  --web
