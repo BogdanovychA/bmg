@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
 
 import flet as ft
@@ -17,12 +18,17 @@ if TYPE_CHECKING:
 TITLE = "Налаштування"
 ROUTE = app.settings.base_url + "/settings"
 
+logger = logging.getLogger(__name__)
+
 
 def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
     """Екран налаштувань"""
 
     async def _clear_cache(event: ft.Event) -> None:
-        await storage.clear()
+        try:
+            await storage.clear()
+        except RuntimeError:
+            logger.exception("Помилка при очистці кешу")
 
     async def _switch(event: ft.Event) -> None:
         """Обробник перемикача вкл/викл будильника"""
@@ -30,7 +36,11 @@ def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
         value = event.control.selected[0]
 
         page.session.store.set("game_mode", value)
-        await storage.set("game_mode", value)
+
+        try:
+            await storage.set("game_mode", value)
+        except RuntimeError:
+            logger.exception("Помилка при записі game_mode")
 
         if value == GameMode.OFFLINE:
             text.value = "Локальний режим роботи (рекомендовано)"

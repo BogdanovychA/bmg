@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import asyncio
+import logging
 import uuid
 
 import flet as ft
@@ -14,6 +15,14 @@ from routes import about, author, error404, root, settings
 from utils import elements
 from utils import measurement_api as ga
 from utils.constants import GameMode
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+)
+logging.getLogger("httpx").setLevel(logging.WARNING)
+
+logger = logging.getLogger(__name__)
 
 
 def build_main_view(page: ft.Page) -> ft.View:
@@ -111,7 +120,12 @@ async def main(page: ft.Page):
             """Допоміжна функція ініціалізації об'єктів,
             зчитування налаштувань з кешу"""
 
-            value = await storage.get_or_default(name, default_value)
+            try:
+                value = await storage.get_or_default(name, default_value)
+            except RuntimeError:
+                logger.exception("Помилка при зчитуванні даних")
+                value = default_value
+
             page.session.store.set(name, value)
 
         await __init_obj("client_id", str(uuid.uuid4()))
