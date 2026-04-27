@@ -551,7 +551,10 @@ version = "1.2.9"
 source = { editable = "." }
 dependencies = [
     { name = "flet" },
+    { name = "flet-cli" },
+    { name = "flet-desktop" },
     { name = "flet-storage" },
+    { name = "flet-web" },
     { name = "httpx" },
     { name = "pydantic" },
     { name = "pydantic-settings" },
@@ -560,10 +563,7 @@ dependencies = [
 [package.dev-dependencies]
 dev = [
     { name = "black" },
-    { name = "flet-cli" },
-    { name = "flet-desktop" },
     { name = "flet-desktop-light" },
-    { name = "flet-web" },
     { name = "isort" },
     { name = "pre-commit" },
 ]
@@ -571,7 +571,10 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "flet", specifier = "==0.84.0" },
+    { name = "flet-cli", specifier = "==0.84.0" },
+    { name = "flet-desktop", specifier = "==0.84.0" },
     { name = "flet-storage", specifier = "==1.1.3" },
+    { name = "flet-web", specifier = "==0.84.0" },
     { name = "httpx", specifier = "==0.28.1" },
     { name = "pydantic", specifier = "==2.13.3" },
     { name = "pydantic-settings", specifier = "==2.14.0" },
@@ -580,10 +583,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "black" },
-    { name = "flet-cli", specifier = "==0.84.0" },
-    { name = "flet-desktop", specifier = "==0.84.0" },
     { name = "flet-desktop-light" },
-    { name = "flet-web", specifier = "==0.84.0" },
     { name = "isort" },
     { name = "pre-commit" },
 ]
