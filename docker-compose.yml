@@ -1,13 +1,13 @@
-name: mini-games
+name: minigames
 
 services:
-  mini-games:
+  minigames:
     build:
       context: .
       dockerfile: Dockerfile
-    image: mini-games:${APP_VERSION}
+    image: minigames:${APP_VERSION}
     pull_policy: missing
-    container_name: mini-games
+    container_name: minigames
     restart: always
     env_file:
       - src/assets/.env
