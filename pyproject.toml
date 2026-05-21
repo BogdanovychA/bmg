@@ -9,22 +9,20 @@ authors = [
 ]
 
 dependencies = [
-    "flet==0.84.0",
+    "flet==0.85.1",
     "flet-storage==1.1.3",
     "httpx==0.28.1",
-    "pydantic-settings==2.14.0",
-    "pydantic==2.13.3",
+    "pydantic-settings==2.14.1",
+    "pydantic==2.13.4",
 ]
 
 [dependency-groups]
 dev = [
-    "flet-desktop==0.84.0",
-    "flet-web==0.84.0",
-    "flet-cli==0.84.0",
-    "flet-desktop-light",
+    "flet-desktop==0.85.1",
+    "flet-web==0.85.1",
+    "flet-cli==0.85.1",
     "pre_commit",
-    "black",
-    "isort",
+    "ruff",
 ]
 
 [tool.flet]
@@ -40,10 +38,9 @@ path = "src"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.black]
+[tool.ruff]
 line-length = 88
-target-version = ['py312']
-skip-string-normalization = true
+target-version = "py312"
 
-[tool.isort]
-profile = "black"
+[tool.ruff.format]
+quote-style = "preserve"

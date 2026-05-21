@@ -38,7 +38,6 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
         cities_cache = await storage.get_or_default("cities_cache", None)
 
         if cities_cache is None:
-
             return GameClient(
                 game=logic.main(all_cities=abstract.SelfData().get_cities())
                 # game=logic.main(all_cities=abstract.TestData().get_cities())
@@ -74,7 +73,6 @@ async def build_view(page: ft.Page, storage: FletStorage) -> ft.View:
             client.event = client.game.send(logic.Input(city=answer_block.value))
 
             if not client.event.error:
-
                 await _save_cache()
 
                 city_block.value = client.event.city

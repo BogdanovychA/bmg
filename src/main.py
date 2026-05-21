@@ -88,7 +88,6 @@ async def main(page: ft.Page):
         page.views.clear()
         page.views.append(build_main_view(page))
         match page.route:
-
             case cities.ROUTE:
                 page.views.append(await cities.build_view(page, storage))
             case next_number.ROUTE:

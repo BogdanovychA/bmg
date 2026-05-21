@@ -108,9 +108,7 @@ def main(
         )  # Остання літера попереднього міста.
 
     while True:
-
         if move == Move.AI:
-
             if not all_cities.get(first_letter):  # None або порожній set — обидва False
                 msg = (
                     f'Ви виграли! Більше немає міст на літеру «{first_letter.upper()}»'
@@ -139,7 +137,6 @@ def main(
             move = Move.PLAYER
 
         elif move == Move.PLAYER:
-
             if restore:
                 restore = False
 
@@ -215,7 +212,6 @@ def main(
 
 
 if __name__ == "__main__":
-
     from games.cities.abstract import SelfData
 
     # game = main(all_cities=SelfData().get_cities())
