@@ -6,14 +6,13 @@ import uuid
 
 import flet as ft
 from flet_storage import FletStorage
+from measurement_api import MeasurementAPI
 
 from config import app, style
+from config import google_analytics as ga_config
 from games.cities import cities
 from games.next_namber import next_number
 from games.tic_tac_toe import tic_tac_toe
-from measurement_api import MeasurementAPI
-
-from config import google_analytics as ga_config
 from routes import about, author, error404, root, settings
 from utils import elements
 from utils.constants import GameMode
@@ -27,7 +26,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 logger = logging.getLogger(__name__)
 
 m10t = MeasurementAPI(
-    m10t_id=ga_config.settings.id,
+    id=ga_config.settings.id,
     secret_key=ga_config.settings.secret_key,
     debug=ga_config.settings.debug,
 )
