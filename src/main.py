@@ -11,9 +11,11 @@ from config import app, style
 from games.cities import cities
 from games.next_namber import next_number
 from games.tic_tac_toe import tic_tac_toe
+from measurement_api import MeasurementAPI
+
+from config import google_analytics as ga_config
 from routes import about, author, error404, root, settings
 from utils import elements
-from utils import measurement_api as ga
 from utils.constants import GameMode
 
 logging.basicConfig(
@@ -23,6 +25,12 @@ logging.basicConfig(
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 logger = logging.getLogger(__name__)
+
+m10t = MeasurementAPI(
+    m10t_id=ga_config.settings.id,
+    secret_key=ga_config.settings.secret_key,
+    debug=ga_config.settings.debug,
+)
 
 
 def build_main_view(page: ft.Page) -> ft.View:
@@ -78,11 +86,11 @@ async def main(page: ft.Page):
     async def route_change():
 
         page.run_task(
-            ga.log_event,
+            m10t.log_event,
             page.session.store.get("client_id"),
-            str(page.platform.value),
             "route_change",
-            page.route,
+            platform=str(page.platform.value),
+            page_path=page.route,
         )
 
         page.views.clear()
